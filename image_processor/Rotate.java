@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -20,18 +20,17 @@ import javax.swing.SwingConstants;
 
 public class Rotate {
 	Frame Fr;
-	JFrame fr;
 	JPanel panel;
 	JLabel label;
 	JTextField tf;
 	JButton bt;
+	JDialog jdlg;
 	
 	public Rotate(Frame frame) {
 		Fr = frame;
 	}
 	// 旋转
 	public void rotate_window() {
-		fr = new JFrame();
 		panel = new JPanel();
 		label = new JLabel();
 		tf = new JTextField();
@@ -39,10 +38,10 @@ public class Rotate {
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		
-		fr.setLocation((screenSize.width - 250) / 2, (screenSize.height - 100) / 2);
-		fr.setSize(250, 100);
-		fr.setVisible(true);
-		
+		jdlg = new JDialog(Fr, "旋转", true);
+		jdlg.setLocation((screenSize.width - 250) / 2, (screenSize.height - 100) / 2);
+		jdlg.setSize(250, 100);
+
 		panel.setLayout(new GridLayout(3, 1));
 		label = new JLabel("旋转角度");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -52,14 +51,15 @@ public class Rotate {
 		panel.add(tf);
 		panel.add(bt);
 		
-		fr.getContentPane().add(panel, BorderLayout.CENTER);
 		bt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO 自动生成的方法存根
-				fr.dispose();
 				rotate(Integer.parseInt(tf.getText()));
+				jdlg.dispose();
 			}
 		});
+		jdlg.getContentPane().add(panel, BorderLayout.CENTER);
+		jdlg.setVisible(true);
 	}
 	
 	public void rotate(int degree) {
