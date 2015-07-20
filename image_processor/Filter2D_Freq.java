@@ -15,35 +15,33 @@ import java.awt.image.WritableRaster;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class Filter2D_Freq {
 	Frame Fr;
-	JFrame fr;
 	JPanel panel;
 	JLabel label;
 	JTextField tf;
 	JButton bt;
+	JDialog jdlg;
 	
 	public Filter2D_Freq(Frame frame) {
 		Fr = frame;
 	}
 	//filter2d_freq
     public void filter2d_freq_window() {
-    	fr = new JFrame();
-        panel = new JPanel();
+    	panel = new JPanel();
         label = new JLabel();
         tf = new JTextField();
         bt = new JButton();
+        jdlg = new JDialog(Fr, "ÆµÂÊÓòÂË²¨", true);
         
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        fr.setLocation((screenSize.width - 260) / 2, (screenSize.height - 100) / 2);
-        
-        fr.setSize(260, 100);
-        fr.setVisible(true);
+        jdlg.setLocation((screenSize.width - 260) / 2, (screenSize.height - 100) / 2);
+        jdlg.setSize(260, 100);
         
         panel.setLayout(new GridLayout(3, 1));
         label = new JLabel("ÇëÑ¡Ôñ²Ù×÷£¬0£¨Æ½»¬£©£¬1£¨Èñ»¯£©");
@@ -54,15 +52,15 @@ public class Filter2D_Freq {
         panel.add(tf);
         panel.add(bt);
         
-        fr.getContentPane().add(panel, BorderLayout.CENTER);
-        
         bt.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                fr.dispose();
+                jdlg.dispose();
                 filter2d_freq(Integer.parseInt(tf.getText()));
             }
         });
+        jdlg.getContentPane().add(panel, BorderLayout.CENTER);
+        jdlg.setVisible(true);
     }
     //filter2d_freq
     public void filter2d_freq(int flag) {

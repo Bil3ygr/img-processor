@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -17,33 +18,31 @@ import javax.swing.JTextField;
 
 public class View_As_Window {
 	Frame Fr;
-	JFrame fr;
-    JPanel panel;
+	JPanel panel;
     JPanel panel_;
     JLabel label;
     JTextField tf;
     JTextField tf_;
     JButton bt;
+    JDialog jdlg;
 
     public View_As_Window(Frame frame) {
     	Fr = frame;
     }
 	//view_as_window
     public void view_as_window_() {
-    	fr = new JFrame();
-        panel = new JPanel();
+    	panel = new JPanel();
         panel_ = new JPanel();
         label = new JLabel();
         tf = new JTextField();
         tf_ = new JTextField();
         bt = new JButton();
+        jdlg = new JDialog(Fr, "截图", true);
         
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        fr.setLocation((screenSize.width - 250) / 2, (screenSize.height - 100) / 2);
-        
-        fr.setSize(250, 100);
-        fr.setVisible(true);
-        
+        jdlg.setLocation((screenSize.width - 250) / 2, (screenSize.height - 100) / 2);
+        jdlg.setSize(250, 100);
+         
         panel.setLayout(new GridLayout(3, 1));
         panel_.setLayout(new GridLayout(1, 2));
         label = new JLabel("请输入截图的大小（宽高）");
@@ -57,14 +56,14 @@ public class View_As_Window {
         panel.add(panel_);
         panel.add(bt);
         
-        fr.getContentPane().add(panel, BorderLayout.CENTER);
-        
         bt.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		fr.dispose();
+        		jdlg.dispose();
         		view_as_window(Integer.parseInt(tf.getText()), Integer.parseInt(tf_.getText()));
         	}
         });
+        jdlg.getContentPane().add(panel, BorderLayout.CENTER);
+        jdlg.setVisible(true);
     }
     //view_as_window
     public void view_as_window(int w, int h) {

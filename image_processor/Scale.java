@@ -15,39 +15,38 @@ import java.awt.image.WritableRaster;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class Scale {
 	Frame Fr;
-	JFrame fr;
-    JPanel panel;
+	JPanel panel;
     JPanel panel_;
     JLabel label;
     JTextField tf;
     JTextField tf_;
     JButton bt;
+    JDialog jdlg;
+    
     public Scale(Frame frame) {
     	Fr = frame;
     }
 	// 输入缩放后图片的大小
 	public void scale_window() {
-		fr = new JFrame();
-        panel = new JPanel();
+		panel = new JPanel();
         panel_ = new JPanel();
         label = new JLabel();
         tf = new JTextField();
         tf_ = new JTextField();
         bt = new JButton();
+        jdlg = new JDialog(Fr, "缩放", true);
         
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        fr.setLocation((screenSize.width - 250) / 2, (screenSize.height - 100) / 2);
-        
-        fr.setSize(250, 100);
-        fr.setVisible(true);
-        
+        jdlg.setLocation((screenSize.width - 250) / 2, (screenSize.height - 100) / 2);
+        jdlg.setSize(250, 100);
+         
         panel.setLayout(new GridLayout(3, 1));
         panel_.setLayout(new GridLayout(1, 2));
         label = new JLabel("请输入新图像的大小（宽高）");
@@ -61,14 +60,14 @@ public class Scale {
         panel.add(panel_);
         panel.add(bt);
         
-        fr.getContentPane().add(panel, BorderLayout.CENTER);
-        
         bt.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		fr.dispose();
+        		jdlg.dispose();
         		scale(Integer.parseInt(tf.getText()), Integer.parseInt(tf_.getText()));
         	}
         });
+        jdlg.getContentPane().add(panel, BorderLayout.CENTER);
+        jdlg.setVisible(true);
 	}
 	// 进行缩放
 	public void scale(int w, int h) {

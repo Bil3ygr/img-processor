@@ -16,6 +16,7 @@ import java.awt.image.WritableRaster;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -26,11 +27,11 @@ public class Equalize_Hist {
 	GetColor gc;
 	PaintHistogram ph;
 	
-	JFrame fr;
-    JPanel panel;
+	JPanel panel;
     JLabel label;
     JTextField tf;
     JButton bt;
+    JDialog jdlg;
 	
 	public Equalize_Hist(Frame frame) {
 		Fr = frame;
@@ -39,17 +40,15 @@ public class Equalize_Hist {
 	}
 	//equalize_hist_window
     public void equalize_hist_window() {
-    	fr = new JFrame();
-        panel = new JPanel();
+    	panel = new JPanel();
         label = new JLabel();
         tf = new JTextField();
         bt = new JButton();
+        jdlg = new JDialog(Fr, "彩色直方图均衡化", true);
         
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        fr.setLocation((screenSize.width - 260) / 2, (screenSize.height - 100) / 2);
-        
-        fr.setSize(260, 100);
-        fr.setVisible(true);
+        jdlg.setLocation((screenSize.width - 260) / 2, (screenSize.height - 100) / 2);
+        jdlg.setSize(260, 100);
         
         panel.setLayout(new GridLayout(3, 1));
         label = new JLabel("请选择操作，1（RGB），2（RGB/3）");
@@ -60,15 +59,14 @@ public class Equalize_Hist {
         panel.add(tf);
         panel.add(bt);
         
-        fr.getContentPane().add(panel, BorderLayout.CENTER);
-        
         bt.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                fr.dispose();
+        	public void actionPerformed(ActionEvent e) {
+                jdlg.dispose();
                 equalize_hist(Integer.parseInt(tf.getText()));
             }
         });
+        jdlg.getContentPane().add(panel, BorderLayout.CENTER);
+        jdlg.setVisible(true);
     }
 	//equalize_hist
     public void equalize_hist(int flag) {

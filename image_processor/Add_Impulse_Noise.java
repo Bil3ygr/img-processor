@@ -16,38 +16,36 @@ import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class Add_Impulse_Noise {
 	Frame Fr;
-	JFrame fr;
-    JPanel panel;
+	JPanel panel;
     JLabel label;
     JTextField tf;
     JTextField tf_;
     JButton bt;
+    JDialog jdlg;
     
     public Add_Impulse_Noise(Frame frame) {
     	Fr = frame;
     }
 	//add_impulse_noise
     public void add_impulse_noise_window() {
-    	fr = new JFrame();
-        panel = new JPanel();
+    	panel = new JPanel();
         label = new JLabel();
         JLabel label_ = new JLabel();
         tf = new JTextField();
         tf_ = new JTextField();
         bt = new JButton();
+        jdlg = new JDialog(Fr, "添加椒盐噪声", true);
         
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        fr.setLocation((screenSize.width - 250) / 2, (screenSize.height - 100) / 2);
-        
-        fr.setSize(250, 150);
-        fr.setVisible(true);
+        jdlg.setLocation((screenSize.width - 250) / 2, (screenSize.height - 100) / 2);
+        jdlg.setSize(250, 150);
         
         panel.setLayout(new GridLayout(5, 1));
         label = new JLabel("盐百分比（0-100）");
@@ -63,14 +61,14 @@ public class Add_Impulse_Noise {
         panel.add(tf_);
         panel.add(bt);
         
-        fr.getContentPane().add(panel, BorderLayout.CENTER);
-        
         bt.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		fr.dispose();
+        		jdlg.dispose();
         		add_impulse_noise(Integer.parseInt(tf.getText()), Integer.parseInt(tf_.getText()));
         	}
         });
+        jdlg.getContentPane().add(panel, BorderLayout.CENTER);
+        jdlg.setVisible(true);
     }
     //add_impulse_noise
     public void add_impulse_noise(int pa, int pb) {

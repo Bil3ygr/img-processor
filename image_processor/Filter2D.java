@@ -15,6 +15,7 @@ import java.awt.image.WritableRaster;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -22,13 +23,13 @@ import javax.swing.JTextField;
 
 public class Filter2D {
 	Frame Fr;
-	JFrame fr;
-    JPanel panel;
+	JPanel panel;
     JPanel panel_;
     JLabel label;
     JTextField tf;
     JTextField tf_;
     JButton bt;
+    JDialog jdlg;
     double Q = 0;
     
     public Filter2D(Frame frame) {
@@ -36,13 +37,13 @@ public class Filter2D {
     }
     //filter2d
     public void filter2d_window() {
-    	fr = new JFrame();
-        panel = new JPanel();
+    	panel = new JPanel();
         label = new JLabel();
         JLabel label_ = new JLabel();
         tf = new JTextField();
         tf_ = new JTextField();
         bt = new JButton();
+        jdlg = new JDialog(Fr, "¬À≤®", true);
         JButton bt_Sharpen = new JButton();
         JButton bt_Sobel1 = new JButton();
         JButton bt_Sobel2 = new JButton();
@@ -54,10 +55,8 @@ public class Filter2D {
         JButton bt_Min = new JButton();
         
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        fr.setLocation((screenSize.width - 250) / 2, (screenSize.height - 100) / 2);
-        
-        fr.setSize(250, 300);
-        fr.setVisible(true);
+        jdlg.setLocation((screenSize.width - 250) / 2, (screenSize.height - 100) / 2);
+        jdlg.setSize(250, 300);
         
         panel.setLayout(new GridLayout(14, 1));
         label = new JLabel("«Î ‰»Î¬À≤®∆˜¥Û–°");
@@ -91,69 +90,69 @@ public class Filter2D {
         panel.add(bt_Max);
         panel.add(bt_Min);
         
-        fr.getContentPane().add(panel, BorderLayout.CENTER);
-        
         bt.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		fr.dispose();
+        		jdlg.dispose();
         		filter2d(Integer.parseInt(tf.getText()), 1);
         	}
         });
         bt_Sharpen.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		fr.dispose();
+        		jdlg.dispose();
         		filter2d(Integer.parseInt(tf.getText()), 2);
         	}
         });
         bt_Sobel1.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		fr.dispose();
+        		jdlg.dispose();
         		filter2d(Integer.parseInt(tf.getText()), 3);
         	}
         });
         bt_Sobel2.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		fr.dispose();
+        		jdlg.dispose();
         		filter2d(Integer.parseInt(tf.getText()), 4);
         	}
         });
         bt_Harmonic.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		fr.dispose();
+        		jdlg.dispose();
         		filter2d(Integer.parseInt(tf.getText()), 5);
         	}
         });
         bt_ContraHarmonic.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		fr.dispose();
+        		jdlg.dispose();
         		Q = Double.parseDouble(tf_.getText());
         		filter2d(Integer.parseInt(tf.getText()), 6);
         	}
         });
         bt_Geometric.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		fr.dispose();
+        		jdlg.dispose();
         		filter2d(Integer.parseInt(tf.getText()), 7);
         	}
         });
         bt_Median.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		fr.dispose();
+        		jdlg.dispose();
         		filter2d(Integer.parseInt(tf.getText()), 8);
         	}
         });
         bt_Max.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		fr.dispose();
+        		jdlg.dispose();
         		filter2d(Integer.parseInt(tf.getText()), 9);
         	}
         });
         bt_Min.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		fr.dispose();
+        		jdlg.dispose();
         		filter2d(Integer.parseInt(tf.getText()), 10);
         	}
         });
+        jdlg.getContentPane().add(panel, BorderLayout.CENTER);
+        jdlg.setVisible(true);
     }
   //filter2d
     public void filter2d(int size, int flag) {
