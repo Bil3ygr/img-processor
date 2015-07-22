@@ -6,6 +6,8 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferInt;
@@ -18,14 +20,16 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 public class Filter2D {
 	Frame Fr;
 	JPanel panel;
-    JPanel panel_;
     JLabel label;
+    JLabel label_;
     JTextField tf;
     JTextField tf_;
     JButton bt;
@@ -35,124 +39,215 @@ public class Filter2D {
     public Filter2D(Frame frame) {
     	Fr = frame;
     }
-    //filter2d
-    public void filter2d_window() {
+    // 平滑
+    public void smooth() {
+    	if (judge()) {
+    		one_tf(1);
+    	}
+    }
+    // 锐化
+    public void sharpen() {
+    	if (judge()) {
+    		one_tf(2);
+    	}
+    }
+    // Sobel 3x3
+    public void sobel3x3() {
+    	if (judge()) {
+    		filter2d(0, 3);
+    	}
+    }
+    // Sobel 2x2
+    public void sobel2x2() {
+    	if (judge()) {
+    		filter2d(0, 4);
+    	}
+    }
+    // 谐波
+    public void harmonic() {
+    	if (judge()) {
+    		one_tf(5);
+    	}
+    }
+    // 逆谐波
+    public void contraharmonic() {
+    	if (judge()) {
+    		two_tf(6);
+    	}
+    }
+    // 几何
+    public void geometric() {
+    	if (judge()) {
+    		one_tf(7);
+    	}
+    }
+    // 中值
+    public void median() {
+    	if (judge()) {
+    		one_tf(8);
+    	}
+    }
+    // 最大值
+    public void max() {
+    	if (judge()) {
+    		one_tf(9);
+    	}
+    }
+    // 最小值
+    public void min() {
+    	if (judge()) {
+    		one_tf(10);
+    	}
+    }
+    // 判断是否有图片
+    public boolean judge() {
+		if (Fr.before != null) {
+			return true;
+		} else {
+			String message = "未打开任何图片！";
+        	JOptionPane.showMessageDialog(Fr, message, "提醒", JOptionPane.DEFAULT_OPTION);
+		}
+		return false;
+	}
+    // 一个输入框
+    public void one_tf(int flag) {
     	panel = new JPanel();
-        label = new JLabel();
-        JLabel label_ = new JLabel();
-        tf = new JTextField();
-        tf_ = new JTextField();
-        bt = new JButton();
-        jdlg = new JDialog(Fr, "滤波", true);
-        JButton bt_Sharpen = new JButton();
-        JButton bt_Sobel1 = new JButton();
-        JButton bt_Sobel2 = new JButton();
-        JButton bt_Harmonic = new JButton();
-        JButton bt_ContraHarmonic = new JButton();
-        JButton bt_Geometric = new JButton();
-        JButton bt_Median = new JButton();
-        JButton bt_Max = new JButton();
-        JButton bt_Min = new JButton();
-        
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        jdlg.setLocation((screenSize.width - 250) / 2, (screenSize.height - 100) / 2);
-        jdlg.setSize(250, 300);
-        
-        panel.setLayout(new GridLayout(14, 1));
-        label = new JLabel("请输入滤波器大小");
-        label.setHorizontalAlignment(JLabel.CENTER);
-        label_ = new JLabel("请输入Q的值");
+		label = new JLabel();
+		tf = new JTextField();
+		bt = new JButton();
+		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		
+		jdlg = new JDialog(Fr, "窗口大小", true);
+		jdlg.setLocation((screenSize.width - 280) / 2, (screenSize.height - 100) / 2);
+		jdlg.setSize(280, 100);
+		jdlg.getRootPane().setDefaultButton(bt);
+		
+		panel.setLayout(new GridLayout(3, 1));
+		label = new JLabel("请输入滤波窗口大小（奇数，且小于100）");
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		tf.setHorizontalAlignment(SwingConstants.CENTER);
+		bt.setText("确定");
+		panel.add(label);
+		panel.add(tf);
+		panel.add(bt);
+		// 指定输入格式
+		tf.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				// TODO Auto-generated method stub
+				// 按下ESC退出对话框
+				if (arg0.getKeyChar() == KeyEvent.VK_ESCAPE)
+					jdlg.dispose();
+			}
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				// TODO Auto-generated method stub
+			}
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				// 限制最大只能输入8位数
+				if (tf.getText().length() < 8)
+					// 限制只能输入以下按键（数字，方向，回车，ESC，tab，删除，退格）
+					if ((e.getKeyChar() >= KeyEvent.VK_0 && e.getKeyChar() <= KeyEvent.VK_9) 
+					      || e.getKeyChar() == KeyEvent.VK_ENTER || e.getKeyChar() == KeyEvent.VK_TAB
+					      || e.getKeyChar() == KeyEvent.VK_BACK_SPACE || e.getKeyChar() == KeyEvent.VK_DELETE 
+					      || e.getKeyChar() == KeyEvent.VK_LEFT || e.getKeyChar() == KeyEvent.VK_RIGHT 
+					      || e.getKeyChar() == KeyEvent.VK_ESCAPE)
+					      return;
+				e.consume();
+			}
+		});
+		
+		bt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO 自动生成的方法存根
+				try {
+					filter2d(Integer.parseInt(tf.getText()), flag);
+					jdlg.dispose();
+				} catch (NumberFormatException e){
+					String message = "请输入数字！";
+		        	JOptionPane.showMessageDialog(Fr, message, "提醒", JOptionPane.DEFAULT_OPTION);
+				}
+			}
+		});
+		jdlg.getContentPane().add(panel, BorderLayout.CENTER);
+		jdlg.setVisible(true);
+    }
+    // 两个输入框
+    public void two_tf(int flag) {
+    	panel = new JPanel();
+		label = new JLabel();
+		label_ = new JLabel();
+		tf = new JTextField();
+		tf_ = new JTextField();
+		bt = new JButton();
+		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		
+		jdlg = new JDialog(Fr, "窗口大小", true);
+		jdlg.setLocation((screenSize.width - 280) / 2, (screenSize.height - 150) / 2);
+		jdlg.setSize(280, 150);
+		jdlg.getRootPane().setDefaultButton(bt);
+		
+		panel.setLayout(new GridLayout(5, 1));
+		label = new JLabel("请输入滤波窗口大小（奇数，且小于100）");
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label_ = new JLabel("请输入Q的值");
         label_.setHorizontalAlignment(JLabel.CENTER);
-        tf.setHorizontalAlignment(JTextField.CENTER);
-        tf_.setHorizontalAlignment(JTextField.CENTER);
-        bt.setText("平滑");
-        bt_Sharpen.setText("锐化");
-        bt_Sobel1.setText("Sobel3x3");
-        bt_Sobel2.setText("Sobel2x2");
-        bt_Harmonic.setText("谐波");
-        bt_ContraHarmonic.setText("逆谐波");
-        bt_Geometric.setText("几何");
-        bt_Median.setText("中值");
-        bt_Max.setText("最大值");
-        bt_Min.setText("最小值");
-        panel.add(label);
-        panel.add(tf);
-        panel.add(bt);
-        panel.add(bt_Sharpen);
-        panel.add(bt_Sobel1);
-        panel.add(bt_Sobel2);
-        panel.add(bt_Harmonic);
-        panel.add(label_);
-        panel.add(tf_);
-        panel.add(bt_ContraHarmonic);
-        panel.add(bt_Geometric);
-        panel.add(bt_Median);
-        panel.add(bt_Max);
-        panel.add(bt_Min);
-        
-        bt.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		jdlg.dispose();
-        		filter2d(Integer.parseInt(tf.getText()), 1);
-        	}
-        });
-        bt_Sharpen.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		jdlg.dispose();
-        		filter2d(Integer.parseInt(tf.getText()), 2);
-        	}
-        });
-        bt_Sobel1.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		jdlg.dispose();
-        		filter2d(Integer.parseInt(tf.getText()), 3);
-        	}
-        });
-        bt_Sobel2.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		jdlg.dispose();
-        		filter2d(Integer.parseInt(tf.getText()), 4);
-        	}
-        });
-        bt_Harmonic.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		jdlg.dispose();
-        		filter2d(Integer.parseInt(tf.getText()), 5);
-        	}
-        });
-        bt_ContraHarmonic.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		jdlg.dispose();
-        		Q = Double.parseDouble(tf_.getText());
-        		filter2d(Integer.parseInt(tf.getText()), 6);
-        	}
-        });
-        bt_Geometric.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		jdlg.dispose();
-        		filter2d(Integer.parseInt(tf.getText()), 7);
-        	}
-        });
-        bt_Median.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		jdlg.dispose();
-        		filter2d(Integer.parseInt(tf.getText()), 8);
-        	}
-        });
-        bt_Max.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		jdlg.dispose();
-        		filter2d(Integer.parseInt(tf.getText()), 9);
-        	}
-        });
-        bt_Min.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		jdlg.dispose();
-        		filter2d(Integer.parseInt(tf.getText()), 10);
-        	}
-        });
-        jdlg.getContentPane().add(panel, BorderLayout.CENTER);
-        jdlg.setVisible(true);
+		tf.setHorizontalAlignment(SwingConstants.CENTER);
+		tf_.setHorizontalAlignment(JTextField.CENTER);
+		bt.setText("确定");
+		panel.add(label);
+		panel.add(tf);
+		panel.add(label_);
+		panel.add(tf_);
+		panel.add(bt);
+		// 指定输入格式
+		tf.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				// TODO Auto-generated method stub
+				// 按下ESC退出对话框
+				if (arg0.getKeyChar() == KeyEvent.VK_ESCAPE)
+					jdlg.dispose();
+			}
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				// TODO Auto-generated method stub
+			}
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				// 限制最大只能输入8位数
+				if (tf.getText().length() < 8)
+					// 限制只能输入以下按键（数字，方向，回车，ESC，tab，删除，退格）
+					if ((e.getKeyChar() >= KeyEvent.VK_0 && e.getKeyChar() <= KeyEvent.VK_9) 
+					      || e.getKeyChar() == KeyEvent.VK_ENTER || e.getKeyChar() == KeyEvent.VK_TAB
+					      || e.getKeyChar() == KeyEvent.VK_BACK_SPACE || e.getKeyChar() == KeyEvent.VK_DELETE 
+					      || e.getKeyChar() == KeyEvent.VK_LEFT || e.getKeyChar() == KeyEvent.VK_RIGHT 
+					      || e.getKeyChar() == KeyEvent.VK_ESCAPE)
+					      return;
+				e.consume();
+			}
+		});
+		
+		bt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO 自动生成的方法存根
+				try {
+					Q = Double.parseDouble(tf_.getText());
+					filter2d(Integer.parseInt(tf.getText()), flag);
+					jdlg.dispose();
+				} catch (NumberFormatException e){
+					String message = "请输入数字！";
+		        	JOptionPane.showMessageDialog(Fr, message, "提醒", JOptionPane.DEFAULT_OPTION);
+				}
+			}
+		});
+		jdlg.getContentPane().add(panel, BorderLayout.CENTER);
+		jdlg.setVisible(true);
     }
   //filter2d
     public void filter2d(int size, int flag) {

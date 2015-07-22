@@ -12,20 +12,21 @@ public class Frame extends JFrame {
 	 * 
 	 */
     private static final long serialVersionUID = 8781460130127454735L;
-
+    
 	JLabel Pic;
     BufferedImage before;
-    BufferedImage after;
-    BufferedImage haze;
+    BufferedImage after = null;
+    BufferedImage haze = null;
 
     Stack<BufferedImage> st = new Stack<BufferedImage>();
+    // 菜单栏
     JMenuBar menubar;
-
+    // 文件菜单
     JMenu file;
     JMenuItem openFile;
     JMenuItem saveFile;
     JMenuItem exit;
-
+    // 操作菜单
     JMenu process;
     JMenuItem rotate;
     JMenuItem scale;
@@ -33,7 +34,17 @@ public class Frame extends JFrame {
     JMenuItem plot_hist_gray;
     JMenuItem equalize_hist_gray;
     JMenuItem view_as_window;
-    JMenuItem filter2d;
+    JMenu filter2d;
+    JMenuItem smooth;
+    JMenuItem sharpen;
+    JMenuItem sobel3x3;
+    JMenuItem sobel2x2;
+    JMenuItem harmonic;
+    JMenuItem contraharmonic;
+    JMenuItem geometric;
+    JMenuItem median;
+    JMenuItem max;
+    JMenuItem min;
     JMenuItem dft2d;
     JMenuItem filter2d_freq;
     JMenuItem add_gaussian_noise;
@@ -42,10 +53,10 @@ public class Frame extends JFrame {
     JMenuItem equalize_hist_color;
     JMenuItem haze_removal;
     JMenuItem guide_filter;
-    
+    // 动画菜单
     JMenu animate;
     JMenuItem animate_;
-
+    // 帮助菜单
     JMenu help;
     JMenuItem about;
 
@@ -55,7 +66,7 @@ public class Frame extends JFrame {
      */
     public Frame() {
     	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setLocation((screenSize.width - 500) / 2, (screenSize.height - 500) / 2);
+    	this.setLocation((screenSize.width - 500) / 2, (screenSize.height - 500) / 2);
         
         setTitle("Image Processor");
         setSize(550, 550);
@@ -69,15 +80,12 @@ public class Frame extends JFrame {
      * add menu to this frame
      */
     public void buildPane() {
-        ScrollPane = new JScrollPane();
-        ScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        ScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        
-        menubar = new JMenuBar();
+    	menubar = new JMenuBar();
         Pic = new JLabel();
         
-        this.getContentPane().add(Pic, BorderLayout.CENTER);
-        Pic.setHorizontalAlignment(JLabel.CENTER);
+        ScrollPane = new JScrollPane(Pic);
+        ScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        ScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         
         setJMenuBar(menubar);
         
@@ -85,6 +93,9 @@ public class Frame extends JFrame {
         ProcessMenu();
         AnimateMenu();
         HelpMenu();
+        
+        this.getContentPane().add(ScrollPane, BorderLayout.CENTER);
+        Pic.setHorizontalAlignment(JLabel.CENTER);
     }
     /*
      * the action when click the JMenuItem
@@ -127,7 +138,17 @@ public class Frame extends JFrame {
         plot_hist_gray = new JMenuItem("灰度直方图");
         equalize_hist_gray = new JMenuItem("灰度直方图均衡化");
         view_as_window = new JMenuItem("截图");
-        filter2d = new JMenuItem("滤波");
+        filter2d = new JMenu("滤波");
+        smooth = new JMenuItem("平滑");
+        sharpen = new JMenuItem("锐化");
+        sobel3x3 = new JMenuItem("Sobel3x3");
+        sobel2x2 = new JMenuItem("Sobel2x2");
+        harmonic = new JMenuItem("谐波");
+        contraharmonic = new JMenuItem("逆谐波");
+        geometric = new JMenuItem("几何");
+        median = new JMenuItem("中值");
+        max = new JMenuItem("最大值");
+        min = new JMenuItem("最小值");
         dft2d = new JMenuItem("离散傅里叶变换");
         filter2d_freq = new JMenuItem("频率域滤波");
         add_gaussian_noise = new JMenuItem("添加高斯噪声");
@@ -144,6 +165,16 @@ public class Frame extends JFrame {
         process.add(equalize_hist_gray);
         process.add(view_as_window);
         process.add(filter2d);
+        filter2d.add(smooth);
+        filter2d.add(sharpen);
+        filter2d.add(sobel3x3);
+        filter2d.add(sobel2x2);
+        filter2d.add(harmonic);
+        filter2d.add(contraharmonic);
+        filter2d.add(geometric);
+        filter2d.add(median);
+        filter2d.add(max);
+        filter2d.add(min);
         process.add(dft2d);
         process.add(filter2d_freq);
         process.add(add_gaussian_noise);

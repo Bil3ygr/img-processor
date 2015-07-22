@@ -6,6 +6,8 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferInt;
@@ -17,6 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -25,19 +28,26 @@ public class Quantize {
 	JPanel panel;
     JLabel label;
     JTextField tf;
-    JTextField tf_;
     JButton bt;
     JDialog jdlg;
     
     public Quantize(Frame frame) {
     	Fr = frame;
     }
+    //
+	public void judge_quantize() {
+		if (Fr.before != null) {
+			quantize_window();
+		} else {
+			String message = "未打开任何图片！";
+        	JOptionPane.showMessageDialog(Fr, message, "提醒", JOptionPane.DEFAULT_OPTION);
+		}
+	}
     //quantize
   	public void quantize_window() {
   		panel = new JPanel();
         label = new JLabel();
         tf = new JTextField();
-        tf_ = new JTextField();
         bt = new JButton();
         jdlg = new JDialog(Fr, "灰度级", true);
         
@@ -49,12 +59,38 @@ public class Quantize {
         label = new JLabel("请输入图像的新灰度级");
         label.setHorizontalAlignment(JLabel.CENTER);
         tf.setHorizontalAlignment(JTextField.CENTER);
-        tf_.setHorizontalAlignment(JTextField.CENTER);
         bt.setText("确定");
         panel.add(label);
         panel.add(tf);
         panel.add(bt);
-         
+        //
+        tf.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				// 按下ESC退出对话框
+				if (e.getKeyChar() == KeyEvent.VK_ESCAPE)
+					jdlg.dispose();
+			}
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				// TODO Auto-generated method stub
+			}
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				// 限制最大只能输入3位数
+				if (tf.getText().length() < 3)
+					// 限制只能输入以下按键（数字，方向，回车，ESC，tab，删除，退格）
+					if ((e.getKeyChar() >= KeyEvent.VK_0 && e.getKeyChar() <= KeyEvent.VK_9) 
+					      || e.getKeyChar() == KeyEvent.VK_ENTER || e.getKeyChar() == KeyEvent.VK_TAB
+					      || e.getKeyChar() == KeyEvent.VK_BACK_SPACE || e.getKeyChar() == KeyEvent.VK_DELETE 
+					      || e.getKeyChar() == KeyEvent.VK_LEFT || e.getKeyChar() == KeyEvent.VK_RIGHT 
+					      || e.getKeyChar() == KeyEvent.VK_ESCAPE)
+					      return;
+				e.consume();
+			}
+        });
         bt.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		jdlg.dispose();

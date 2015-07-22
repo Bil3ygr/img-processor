@@ -6,6 +6,8 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferInt;
@@ -17,6 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -25,45 +28,116 @@ public class Scale {
 	JPanel panel;
     JPanel panel_;
     JLabel label;
-    JTextField tf;
-    JTextField tf_;
+    JTextField tf_w;
+    JTextField tf_h;
     JButton bt;
     JDialog jdlg;
     
     public Scale(Frame frame) {
     	Fr = frame;
     }
+    //
+	public void judge_scale() {
+		if (Fr.before != null) {
+			scale_window();
+		} else {
+			String message = "未打开任何图片！";
+        	JOptionPane.showMessageDialog(Fr, message, "提醒", JOptionPane.DEFAULT_OPTION);
+		}
+	}
 	// 输入缩放后图片的大小
 	public void scale_window() {
 		panel = new JPanel();
         panel_ = new JPanel();
         label = new JLabel();
-        tf = new JTextField();
-        tf_ = new JTextField();
+        tf_w = new JTextField();
+        tf_h = new JTextField();
         bt = new JButton();
         jdlg = new JDialog(Fr, "缩放", true);
         
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         jdlg.setLocation((screenSize.width - 250) / 2, (screenSize.height - 100) / 2);
         jdlg.setSize(250, 100);
+        jdlg.getRootPane().setDefaultButton(bt);
          
         panel.setLayout(new GridLayout(3, 1));
         panel_.setLayout(new GridLayout(1, 2));
         label = new JLabel("请输入新图像的大小（宽高）");
         label.setHorizontalAlignment(JLabel.CENTER);
-        tf.setHorizontalAlignment(JTextField.CENTER);
-        tf_.setHorizontalAlignment(JTextField.CENTER);
+        tf_w.setHorizontalAlignment(JTextField.CENTER);
+        tf_h.setHorizontalAlignment(JTextField.CENTER);
         bt.setText("确定");
         panel.add(label);
-        panel_.add(tf);
-        panel_.add(tf_);
+        panel_.add(tf_w);
+        panel_.add(tf_h);
         panel.add(panel_);
         panel.add(bt);
+   		// 宽
+        tf_w.addKeyListener(new KeyListener() {
+        	@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+        		// 按下ESC退出对话框
+        		if (e.getKeyChar() == KeyEvent.VK_ESCAPE)
+    				jdlg.dispose();
+			}
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				// 限制最大只能输入4位数
+				if (tf_w.getText().length() < 4)
+					// 限制只能输入以下按键（数字，方向，回车，ESC，tab，删除，退格）
+					if ((e.getKeyChar() >= KeyEvent.VK_0 && e.getKeyChar() <= KeyEvent.VK_9) 
+					      || e.getKeyChar() == KeyEvent.VK_ENTER || e.getKeyChar() == KeyEvent.VK_TAB
+					      || e.getKeyChar() == KeyEvent.VK_BACK_SPACE || e.getKeyChar() == KeyEvent.VK_DELETE 
+					      || e.getKeyChar() == KeyEvent.VK_LEFT || e.getKeyChar() == KeyEvent.VK_RIGHT 
+					      || e.getKeyChar() == KeyEvent.VK_ESCAPE)
+					      return;
+				e.consume();
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+			}
+        });
+        // 高
+        tf_h.addKeyListener(new KeyListener() {
+        	@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+        		// 按下ESC退出对话框
+        		if (e.getKeyChar() == KeyEvent.VK_ESCAPE)
+    				jdlg.dispose();
+			}
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				// 限制最大只能输入4位数
+				if (tf_h.getText().length() < 4)
+					// 限制只能输入以下按键（数字，方向，回车，ESC，tab，删除，退格）
+					if ((e.getKeyChar() >= KeyEvent.VK_0 && e.getKeyChar() <= KeyEvent.VK_9) 
+					      || e.getKeyChar() == KeyEvent.VK_ENTER || e.getKeyChar() == KeyEvent.VK_TAB
+					      || e.getKeyChar() == KeyEvent.VK_BACK_SPACE || e.getKeyChar() == KeyEvent.VK_DELETE 
+					      || e.getKeyChar() == KeyEvent.VK_LEFT || e.getKeyChar() == KeyEvent.VK_RIGHT 
+					      || e.getKeyChar() == KeyEvent.VK_ESCAPE)
+					      return;
+				e.consume();
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+			}
+        });
         
         bt.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		jdlg.dispose();
-        		scale(Integer.parseInt(tf.getText()), Integer.parseInt(tf_.getText()));
+        		try {
+					scale(Integer.parseInt(tf_w.getText()), Integer.parseInt(tf_h.getText()));
+					jdlg.dispose();
+				} catch (NumberFormatException e1){
+					String message = "请输入数字！";
+		        	JOptionPane.showMessageDialog(Fr, message, "提醒", JOptionPane.DEFAULT_OPTION);
+				}
         	}
         });
         jdlg.getContentPane().add(panel, BorderLayout.CENTER);

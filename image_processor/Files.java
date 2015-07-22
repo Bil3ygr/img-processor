@@ -12,16 +12,21 @@ import java.io.*;
 
 public class Files implements ActionListener {
     Frame Fr;
-    JFileChooser dlg = new JFileChooser();
+    JFileChooser dlg;
+    // 文件类型
     String[] jpg = {"jpg", "jpeg", "JPG", "JPEG"};
     String[] bmp = {"bmp", "BMP"};
     String[] png = {"png", "PNG"};
+    // 文件类型过滤器
     FileFilter filter_jpg = new FileNameExtensionFilter("*.jpg", jpg);
     FileFilter filter_bmp = new FileNameExtensionFilter("*.bmp", bmp);
     FileFilter filter_png = new FileNameExtensionFilter("*.png", png);
+    // 当前绝对路径
+    String absolutePath;
     
     public Files(Frame frame) {
         Fr = frame;
+        // 点击事件
         Fr.openFile.addActionListener(this);
         Fr.saveFile.addActionListener(this);
         Fr.exit.addActionListener(this);
@@ -32,26 +37,40 @@ public class Files implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         /*
-         * open file
+         * 打开文件
          */
         if (source == Fr.openFile) {
-        	dlg.setFileFilter(filter_bmp);
-        	dlg.setFileFilter(filter_png);
-        	dlg.setFileFilter(filter_jpg);
-            dlg.setDialogTitle("Open file");
+        	// 打开默认目录
+        	if (absolutePath != null) {
+        		dlg = new JFileChooser(new File(absolutePath));
+        	} else {
+        		dlg = new JFileChooser();
+        	}
+        	// 设置过滤器
+            dlg.setFileFilter(filter_bmp);
+            dlg.setFileFilter(filter_png);
+            dlg.setFileFilter(filter_jpg);
+            dlg.setDialogTitle("打开文件");
             int result = dlg.showOpenDialog(Fr);
             if (result == JFileChooser.APPROVE_OPTION) {
-                File f = dlg.getSelectedFile();
-                String path = f.getAbsolutePath();
+            	// 选中文件的绝对路径
+                String path = dlg.getSelectedFile().getAbsolutePath();
+                // 设置绝对路径
+                absolutePath = path;
                 try {
                     BufferedImage read = ImageIO.read(new File(path));
+                    // 不为空，读取正确
+                    if (read != null) {
+                        Fr.before = read;
+                        Fr.after = read;
                     
-                    Fr.before = read;
-                    Fr.after = read;
-                    
-                    ImageIcon icon = new ImageIcon(Fr.before);
-                    Fr.Pic.setIcon(icon);
-                    Fr.Pic.repaint();
+                        ImageIcon icon = new ImageIcon(Fr.before);
+                        Fr.Pic.setIcon(icon);
+                        Fr.Pic.repaint();
+                    } else {
+                    	String message = "此文件不是图片！";
+                    	JOptionPane.showMessageDialog(Fr, message, "提醒", JOptionPane.DEFAULT_OPTION);
+                    }
                 } catch (IOException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
@@ -59,20 +78,36 @@ public class Files implements ActionListener {
             }
         }
         /*
-         * save file
+         * 保存文件
          */
         else if (source == Fr.saveFile) {
-            dlg.setDialogTitle("Save file");
+        	// 打开选中文件的默认目录
+        	dlg = new JFileChooser(new File(absolutePath));
+        	// 设置过滤器
+        	dlg.setFileFilter(filter_bmp);
+            dlg.setFileFilter(filter_png);
+            dlg.setFileFilter(filter_jpg);
+            dlg.setDialogTitle("保存文件");
             int result = dlg.showSaveDialog(Fr);
             if (result == JFileChooser.APPROVE_OPTION) {
                 String path = dlg.getSelectedFile().getAbsolutePath();
                 try {
-                	File file = new File(path);
+                    File file;
                     BufferedImage bi = new BufferedImage(Fr.after.getWidth(null), Fr.after.getHeight(null), BufferedImage.TYPE_INT_RGB);
                     Graphics2D g2 = bi.createGraphics();
                     g2.drawImage(Fr.after, 0, 0, null);
                     g2.dispose();
-                    ImageIO.write(bi, "jpg", file);
+                    // 保存文件，只需输入文件名，自动完成后缀
+                    if (dlg.getFileFilter() == filter_bmp) {
+                    	file = new File(path + ".bmp");
+                    	ImageIO.write(bi, "bmp", file);
+                    } else if (dlg.getFileFilter() == filter_png) {
+                    	file = new File(path + ".png");
+                    	ImageIO.write(bi, "png", file);
+                    } else {
+                    	file = new File(path + ".jpg");
+                    	ImageIO.write(bi, "jpg", file);
+                    }
                 } catch (IOException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
@@ -80,7 +115,7 @@ public class Files implements ActionListener {
             }
         }
         /*
-         * exit
+         * 退出
          */
         else {
             System.exit(0);

@@ -28,7 +28,16 @@ public class Processor implements ActionListener {
         Fr.plot_hist_gray.addActionListener(this);
         Fr.equalize_hist_gray.addActionListener(this);
         Fr.view_as_window.addActionListener(this);
-        Fr.filter2d.addActionListener(this);
+        Fr.smooth.addActionListener(this);
+        Fr.sharpen.addActionListener(this);
+        Fr.sobel3x3.addActionListener(this);
+        Fr.sobel2x2.addActionListener(this);
+        Fr.harmonic.addActionListener(this);
+        Fr.contraharmonic.addActionListener(this);
+        Fr.geometric.addActionListener(this);
+        Fr.median.addActionListener(this);
+        Fr.max.addActionListener(this);
+        Fr.min.addActionListener(this);
         Fr.dft2d.addActionListener(this);
         Fr.filter2d_freq.addActionListener(this);
         Fr.add_gaussian_noise.addActionListener(this);
@@ -43,13 +52,13 @@ public class Processor implements ActionListener {
         Object source = e.getSource();
         if (source == Fr.rotate) {
         	rotate = new Rotate(Fr);
-        	rotate.rotate_window();
+        	rotate.judge_rotate();
         } else if (source == Fr.scale) {
         	scale = new Scale(Fr);
-        	scale.scale_window();
+        	scale.judge_scale();
         } else if (source == Fr.quantize) {
         	quantize = new Quantize(Fr);
-        	quantize.quantize_window();
+        	quantize.judge_quantize();
         } else if (source == Fr.plot_hist_gray) {
         	plot_hist = new Plot_Hist(Fr);
         	plot_hist.plot_hist(0);
@@ -59,9 +68,36 @@ public class Processor implements ActionListener {
         } else if (source == Fr.view_as_window) {
         	view_as_window = new View_As_Window(Fr);
         	view_as_window.view_as_window_();
-        } else if (source == Fr.filter2d) {
+        } else if (source == Fr.smooth) {
         	filter2d = new Filter2D(Fr);
-        	filter2d.filter2d_window();
+        	filter2d.smooth();
+        } else if (source == Fr.sharpen) {
+        	filter2d = new Filter2D(Fr);
+        	filter2d.sharpen();
+        } else if (source == Fr.sobel3x3) {
+        	filter2d = new Filter2D(Fr);
+        	filter2d.sobel3x3();
+        } else if (source == Fr.sobel2x2) {
+        	filter2d = new Filter2D(Fr);
+        	filter2d.sobel2x2();
+        } else if (source == Fr.harmonic) {
+        	filter2d = new Filter2D(Fr);
+        	filter2d.harmonic();
+        } else if (source == Fr.contraharmonic) {
+        	filter2d = new Filter2D(Fr);
+        	filter2d.contraharmonic();
+        } else if (source == Fr.geometric) {
+        	filter2d = new Filter2D(Fr);
+        	filter2d.geometric();
+        } else if (source == Fr.median) {
+        	filter2d = new Filter2D(Fr);
+        	filter2d.median();
+        } else if (source == Fr.max) {
+        	filter2d = new Filter2D(Fr);
+        	filter2d.max();
+        } else if (source == Fr.min) {
+        	filter2d = new Filter2D(Fr);
+        	filter2d.min();
         } else if (source == Fr.dft2d) {
         	dft2d = new DFT2D(Fr);
         	dft2d.dft2d_window();
