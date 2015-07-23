@@ -1,11 +1,5 @@
 package image_processor;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferInt;
@@ -14,56 +8,16 @@ import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 public class DFT2D {
 	Frame Fr;
-	JPanel panel;
-	JLabel label;
-	JTextField tf;
-	JButton bt;
-	JDialog jdlg;
 	
 	public DFT2D(Frame frame) {
 		Fr = frame;
 	}
-	//dft2d
-    public void dft2d_window() {
-    	panel = new JPanel();
-        label = new JLabel();
-        tf = new JTextField();
-        bt = new JButton();
-        jdlg = new JDialog(Fr, "傅立叶变换", true);
-        
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        jdlg.setLocation((screenSize.width - 250) / 2, (screenSize.height - 100) / 2);
-        jdlg.setSize(250, 100);
-        
-        panel.setLayout(new GridLayout(3, 1));
-        label = new JLabel("请选择操作，0（DFT）或1（IDFT）");
-        label.setHorizontalAlignment(JLabel.CENTER);
-        tf.setHorizontalAlignment(JTextField.CENTER);
-        bt.setText("确定");
-        panel.add(label);
-        panel.add(tf);
-        panel.add(bt);
-        
-        bt.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		jdlg.dispose();
-        		dft2d(Integer.parseInt(tf.getText()));
-        	}
-        });
-        jdlg.getContentPane().add(panel, BorderLayout.CENTER);
-        jdlg.setVisible(true);
-    }
     //dft2d
     public void dft2d(int flag) {
-    	BufferedImage input = Fr.before;
+    	BufferedImage input = Fr.st.peek();
     	/*
          * 获取宽高
          */
@@ -219,9 +173,12 @@ public class DFT2D {
         DataBuffer dataBuffer = new DataBufferInt(after_, M * N);
         WritableRaster raster = Raster.createPackedRaster(dataBuffer, M, N, M, new int[]{0xff0000, 0xff00, 0xff}, null);
         DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
-        BufferedImage image_ = new BufferedImage(directColorModel, raster, true, null);
-        Fr.after = image_;
-        ImageIcon icon = new ImageIcon(image_);
+        BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+        
+        Fr.st.push(image);
+        Fr.st_.clear();
+        Fr.after = image;
+        ImageIcon icon = new ImageIcon(image);
         Fr.Pic.setIcon(icon);
         Fr.Pic.repaint();
     }

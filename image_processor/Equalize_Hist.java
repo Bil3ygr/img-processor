@@ -77,7 +77,7 @@ public class Equalize_Hist {
         JLabel pic_ = new JLabel();
         JLabel pic__ = new JLabel();
         
-        BufferedImage img = Fr.before;
+        BufferedImage img = Fr.st.peek();
         
         int wid = img.getWidth();
         int hei = img.getHeight();
@@ -150,8 +150,8 @@ public class Equalize_Hist {
         			countimg[gray]++;
         		}
         	}
-        	BufferedImage scaleimage = ph.paintHistogram(countimg, str, new Color[] {Color.BLACK});
-        	ImageIcon icon = new ImageIcon(scaleimage);
+        	BufferedImage image = ph.paintHistogram(countimg, str, new Color[] {Color.BLACK});
+        	ImageIcon icon = new ImageIcon(image);
         	pic.setIcon(icon);
         	pic.repaint();
         } else if (flag == 1) {
@@ -241,16 +241,16 @@ public class Equalize_Hist {
         			bData[blue]++;
         		}
         	}
-        	BufferedImage scaleimage = ph.paintHistogram(rData, str, new Color[] {Color.RED});
-        	ImageIcon icon = new ImageIcon(scaleimage);
+        	BufferedImage image = ph.paintHistogram(rData, str, new Color[] {Color.RED});
+        	ImageIcon icon = new ImageIcon(image);
         	pic.setIcon(icon);
         	pic.repaint();
-        	scaleimage = ph.paintHistogram(gData, str, new Color[] {Color.GREEN});
-        	icon = new ImageIcon(scaleimage);
+        	image = ph.paintHistogram(gData, str, new Color[] {Color.GREEN});
+        	icon = new ImageIcon(image);
         	pic_.setIcon(icon);
         	pic_.repaint();
-        	scaleimage = ph.paintHistogram(bData, str, new Color[] {Color.BLUE});
-        	icon = new ImageIcon(scaleimage);
+        	image = ph.paintHistogram(bData, str, new Color[] {Color.BLUE});
+        	icon = new ImageIcon(image);
         	pic__.setIcon(icon);
         	pic__.repaint();
         } else if (flag == 2) {
@@ -335,16 +335,16 @@ public class Equalize_Hist {
         			bData[blue]++;
         		}
         	}
-        	BufferedImage scaleimage = ph.paintHistogram(rData, str, new Color[] {Color.RED});
-        	ImageIcon icon = new ImageIcon(scaleimage);
+        	BufferedImage image = ph.paintHistogram(rData, str, new Color[] {Color.RED});
+        	ImageIcon icon = new ImageIcon(image);
         	pic.setIcon(icon);
         	pic.repaint();
-        	scaleimage = ph.paintHistogram(gData, str, new Color[] {Color.GREEN});
-        	icon = new ImageIcon(scaleimage);
+        	image = ph.paintHistogram(gData, str, new Color[] {Color.GREEN});
+        	icon = new ImageIcon(image);
         	pic_.setIcon(icon);
         	pic_.repaint();
-        	scaleimage = ph.paintHistogram(bData, str, new Color[] {Color.BLUE});
-        	icon = new ImageIcon(scaleimage);
+        	image = ph.paintHistogram(bData, str, new Color[] {Color.BLUE});
+        	icon = new ImageIcon(image);
         	pic__.setIcon(icon);
         	pic__.repaint();
         }
@@ -354,9 +354,12 @@ public class Equalize_Hist {
         DataBuffer dataBuffer = new DataBufferInt(afterimg, wid * hei);
         WritableRaster raster = Raster.createPackedRaster(dataBuffer, wid, hei, wid, new int[]{0xff0000, 0xff00, 0xff}, null);
         DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
-        BufferedImage scaleimage_ = new BufferedImage(directColorModel, raster, true, null);
-        Fr.after = scaleimage_;
-        ImageIcon icon_ = new ImageIcon(scaleimage_);
+        BufferedImage image_ = new BufferedImage(directColorModel, raster, true, null);
+        
+        Fr.st.push(image_);
+        Fr.st_.clear();
+        Fr.after = image_;
+        ImageIcon icon_ = new ImageIcon(image_);
         Fr.Pic.setIcon(icon_);
         Fr.Pic.repaint();
     }

@@ -67,7 +67,7 @@ public class View_As_Window {
     }
     //view_as_window
     public void view_as_window(int w, int h) {
-    	BufferedImage img = Fr.after;
+    	BufferedImage img = Fr.st.peek();
         BufferedImage img_;
         int wid = img.getWidth();
         int hei = img.getHeight();

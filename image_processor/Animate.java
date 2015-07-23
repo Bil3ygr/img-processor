@@ -46,7 +46,7 @@ public class Animate implements ActionListener {
 					createGifPanel(path);
 				} else {
 					String message = "不是指定格式的动画！";
-					JOptionPane.showMessageDialog(Fr, message, "提醒", JOptionPane.DEFAULT_OPTION);
+					JOptionPane.showMessageDialog(Fr, message, "提醒", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}

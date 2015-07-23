@@ -1,11 +1,5 @@
 package image_processor;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferInt;
@@ -14,57 +8,16 @@ import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 public class Filter2D_Freq {
 	Frame Fr;
-	JPanel panel;
-	JLabel label;
-	JTextField tf;
-	JButton bt;
-	JDialog jdlg;
 	
 	public Filter2D_Freq(Frame frame) {
 		Fr = frame;
 	}
-	//filter2d_freq
-    public void filter2d_freq_window() {
-    	panel = new JPanel();
-        label = new JLabel();
-        tf = new JTextField();
-        bt = new JButton();
-        jdlg = new JDialog(Fr, "频率域滤波", true);
-        
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        jdlg.setLocation((screenSize.width - 260) / 2, (screenSize.height - 100) / 2);
-        jdlg.setSize(260, 100);
-        
-        panel.setLayout(new GridLayout(3, 1));
-        label = new JLabel("请选择操作，0（平滑），1（锐化）");
-        label.setHorizontalAlignment(JLabel.CENTER);
-        tf.setHorizontalAlignment(JTextField.CENTER);
-        bt.setText("确定");
-        panel.add(label);
-        panel.add(tf);
-        panel.add(bt);
-        
-        bt.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                jdlg.dispose();
-                filter2d_freq(Integer.parseInt(tf.getText()));
-            }
-        });
-        jdlg.getContentPane().add(panel, BorderLayout.CENTER);
-        jdlg.setVisible(true);
-    }
     //filter2d_freq
     public void filter2d_freq(int flag) {
-    	BufferedImage input = Fr.before;
+    	BufferedImage input = Fr.st.peek();
     	//图片宽高
     	int M = input.getWidth();
     	int N = input.getHeight();
@@ -235,9 +188,12 @@ public class Filter2D_Freq {
         DataBuffer dataBuffer = new DataBufferInt(after_, M * N);
         WritableRaster raster = Raster.createPackedRaster(dataBuffer, M, N, M, new int[]{0xff0000, 0xff00, 0xff}, null);
         DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
-        BufferedImage image_ = new BufferedImage(directColorModel, raster, true, null);
-        Fr.after = image_;
-        ImageIcon icon = new ImageIcon(image_);
+        BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+        
+        Fr.st.push(image);
+        Fr.st_.clear();
+        Fr.after = image;
+        ImageIcon icon = new ImageIcon(image);
         Fr.Pic.setIcon(icon);
         Fr.Pic.repaint();
     }

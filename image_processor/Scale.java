@@ -36,15 +36,6 @@ public class Scale {
     public Scale(Frame frame) {
     	Fr = frame;
     }
-    //
-	public void judge_scale() {
-		if (Fr.before != null) {
-			scale_window();
-		} else {
-			String message = "未打开任何图片！";
-        	JOptionPane.showMessageDialog(Fr, message, "提醒", JOptionPane.DEFAULT_OPTION);
-		}
-	}
 	// 输入缩放后图片的大小
 	public void scale_window() {
 		panel = new JPanel();
@@ -145,7 +136,7 @@ public class Scale {
 	}
 	// 进行缩放
 	public void scale(int w, int h) {
-		BufferedImage img = Fr.before;
+		BufferedImage img = Fr.st.peek();
         int wid = img.getWidth();
         int hei = img.getHeight();
         int width = w;
@@ -158,9 +149,12 @@ public class Scale {
         DataBuffer dataBuffer = new DataBufferInt(afterimg, width * height);
         WritableRaster raster = Raster.createPackedRaster(dataBuffer, width, height, width, new int[]{0xff0000, 0xff00, 0xff}, null);
         DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
-        BufferedImage scaleimage = new BufferedImage(directColorModel, raster, true, null);
-        Fr.after = scaleimage;
-        ImageIcon icon = new ImageIcon(scaleimage);
+        BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+        
+        Fr.st.push(image);
+        Fr.st_.clear();
+        Fr.after = image;
+        ImageIcon icon = new ImageIcon(image);
         Fr.Pic.setIcon(icon);
         Fr.Pic.repaint();
 	}

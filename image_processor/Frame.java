@@ -14,11 +14,12 @@ public class Frame extends JFrame {
     private static final long serialVersionUID = 8781460130127454735L;
     
 	JLabel Pic;
-    BufferedImage before;
+    BufferedImage before = null;
     BufferedImage after = null;
     BufferedImage haze = null;
 
     Stack<BufferedImage> st = new Stack<BufferedImage>();
+    Stack<BufferedImage> st_ = new Stack<BufferedImage>();
     // 菜单栏
     JMenuBar menubar;
     // 文件菜单
@@ -30,10 +31,21 @@ public class Frame extends JFrame {
     JMenu process;
     JMenuItem rotate;
     JMenuItem scale;
+    JMenuItem gray;
     JMenuItem quantize;
+    
+    JMenu plot_hist;
     JMenuItem plot_hist_gray;
+    JMenuItem plot_hist_color;
+    
+    JMenu equalize_hist;
     JMenuItem equalize_hist_gray;
+    JMenu equalize_hist_color;
+    JMenuItem equalize_hist_color_1;
+    JMenuItem equalize_hist_color_2;
+    
     JMenuItem view_as_window;
+    
     JMenu filter2d;
     JMenuItem smooth;
     JMenuItem sharpen;
@@ -45,17 +57,27 @@ public class Frame extends JFrame {
     JMenuItem median;
     JMenuItem max;
     JMenuItem min;
-    JMenuItem dft2d;
-    JMenuItem filter2d_freq;
+    
+    JMenu dft2d;
+    JMenuItem dft2d_dft;
+    JMenuItem dft2d_idft;
+    
+    JMenu filter2d_freq;
+    JMenuItem filter2d_freq_smooth;
+    JMenuItem filter2d_freq_sharpen;
+    
     JMenuItem add_gaussian_noise;
     JMenuItem add_impulse_noise;
-    JMenuItem plot_hist_color;
-    JMenuItem equalize_hist_color;
     JMenuItem haze_removal;
     JMenuItem guide_filter;
     // 动画菜单
     JMenu animate;
     JMenuItem animate_;
+    // 重做菜单
+    JMenu undo;
+    JMenuItem step_before;
+    JMenuItem step_after;
+    JMenuItem original;
     // 帮助菜单
     JMenu help;
     JMenuItem about;
@@ -92,6 +114,7 @@ public class Frame extends JFrame {
         FileMenu();
         ProcessMenu();
         AnimateMenu();
+        UndoMenu();
         HelpMenu();
         
         this.getContentPane().add(ScrollPane, BorderLayout.CENTER);
@@ -104,6 +127,7 @@ public class Frame extends JFrame {
         new Files(this);
         new Processor(this);
         new Animate(this);
+        new Undo(this);
         new Help(this);
     }
     /*
@@ -134,9 +158,16 @@ public class Frame extends JFrame {
         process = new JMenu("操作");
         rotate = new JMenuItem("旋转");
         scale = new JMenuItem("缩放");
+        gray = new JMenuItem("灰度图");
         quantize = new JMenuItem("灰度级");
+        plot_hist = new JMenu("直方图");
         plot_hist_gray = new JMenuItem("灰度直方图");
+        plot_hist_color = new JMenuItem("彩色直方图");
+        equalize_hist = new JMenu("直方图均衡化");
         equalize_hist_gray = new JMenuItem("灰度直方图均衡化");
+        equalize_hist_color = new JMenu("彩色直方图均衡化");
+        equalize_hist_color_1 = new JMenuItem("分别对RGB均衡化");
+        equalize_hist_color_2 = new JMenuItem("对RGB求平均再均衡化");
         view_as_window = new JMenuItem("截图");
         filter2d = new JMenu("滤波");
         smooth = new JMenuItem("平滑");
@@ -149,20 +180,29 @@ public class Frame extends JFrame {
         median = new JMenuItem("中值");
         max = new JMenuItem("最大值");
         min = new JMenuItem("最小值");
-        dft2d = new JMenuItem("离散傅里叶变换");
-        filter2d_freq = new JMenuItem("频率域滤波");
+        dft2d = new JMenu("离散傅里叶变换");
+        dft2d_dft = new JMenuItem("DFT");
+        dft2d_idft = new JMenuItem("IDFT");
+        filter2d_freq = new JMenu("频率域滤波");
+        filter2d_freq_smooth = new JMenuItem("平滑");
+        filter2d_freq_sharpen = new JMenuItem("锐化");
         add_gaussian_noise = new JMenuItem("添加高斯噪声");
         add_impulse_noise = new JMenuItem("添加脉冲（椒盐）噪声");
-        plot_hist_color = new JMenuItem("彩色直方图");
-        equalize_hist_color = new JMenuItem("彩色直方图均衡化");
         haze_removal = new JMenuItem("去雾");
         guide_filter = new JMenuItem("导向滤波");
         
         process.add(rotate);
         process.add(scale);
+        process.add(gray);
         process.add(quantize);
-        process.add(plot_hist_gray);
-        process.add(equalize_hist_gray);
+        process.add(plot_hist);
+        plot_hist.add(plot_hist_gray);
+        plot_hist.add(plot_hist_color);
+        process.add(equalize_hist);
+        equalize_hist.add(equalize_hist_gray);
+        equalize_hist.add(equalize_hist_color);
+        equalize_hist_color.add(equalize_hist_color_1);
+        equalize_hist_color.add(equalize_hist_color_2);
         process.add(view_as_window);
         process.add(filter2d);
         filter2d.add(smooth);
@@ -176,11 +216,13 @@ public class Frame extends JFrame {
         filter2d.add(max);
         filter2d.add(min);
         process.add(dft2d);
+        dft2d.add(dft2d_dft);
+        dft2d.add(dft2d_idft);
         process.add(filter2d_freq);
+        filter2d_freq.add(filter2d_freq_smooth);
+        filter2d_freq.add(filter2d_freq_sharpen);
         process.add(add_gaussian_noise);
         process.add(add_impulse_noise);
-        process.add(plot_hist_color);
-        process.add(equalize_hist_color);
         process.add(haze_removal);
         process.add(guide_filter);
         
@@ -198,6 +240,21 @@ public class Frame extends JFrame {
     	animate_ = new JMenuItem("选择文件");
     	
     	animate.add(animate_);
+    }
+    /*
+     * undo menu
+     */
+    public void UndoMenu() {
+    	undo = new JMenu("重做");
+    	menubar.add(undo);
+    	
+    	step_before = new JMenuItem("上一步");
+    	step_after = new JMenuItem("下一步");
+    	original = new JMenuItem("原图");
+    	
+    	undo.add(step_before);
+    	undo.add(step_after);
+    	undo.add(original);
     }
     /*
      * help menu

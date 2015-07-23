@@ -66,7 +66,7 @@ public class Haze_Removal {
     }
     //haze_removal
     public void haze_removal(int r) {
-    	BufferedImage img = Fr.before;
+    	BufferedImage img = Fr.st.peek();
     	int w = img.getWidth();
     	int h = img.getHeight();
     	
@@ -194,10 +194,13 @@ public class Haze_Removal {
     	DataBuffer dataBuffer = new DataBufferInt(jx, w * h);
         WritableRaster raster = Raster.createPackedRaster(dataBuffer, w, h, w, new int[]{0xff0000, 0xff00, 0xff}, null);
         DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
-        BufferedImage image_ = new BufferedImage(directColorModel, raster, true, null);
-        Fr.haze = image_;
-        Fr.after = image_;
-        ImageIcon icon = new ImageIcon(image_);
+        BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+        
+        Fr.st.push(image);
+        Fr.st_.clear();
+        Fr.haze = image;
+        Fr.after = image;
+        ImageIcon icon = new ImageIcon(image);
         Fr.Pic.setIcon(icon);
         Fr.Pic.repaint();
     }

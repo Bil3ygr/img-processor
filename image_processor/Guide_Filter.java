@@ -71,7 +71,7 @@ public class Guide_Filter {
     public void guide_filter(int R) {
     	// 4r < R < 8R
     	int r = 6 * R;
-    	BufferedImage image = Fr.before;
+    	BufferedImage image = Fr.st.peek();
     	BufferedImage img = Fr.haze;
     	int w = img.getWidth();
     	int h = img.getHeight();
@@ -263,6 +263,9 @@ public class Guide_Filter {
         WritableRaster raster = Raster.createPackedRaster(dataBuffer, w, h, w, new int[]{0xff0000, 0xff00, 0xff}, null);
         DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
         BufferedImage image_ = new BufferedImage(directColorModel, raster, true, null);
+        
+        Fr.st.push(image_);
+        Fr.st_.clear();
         Fr.after = image_;
         ImageIcon icon = new ImageIcon(image_);
         Fr.Pic.setIcon(icon);

@@ -260,7 +260,7 @@ public class Filter2D {
             f.setTitle("Smooth");
             f.setVisible(true);
             
-            BufferedImage img = Fr.before;
+            BufferedImage img = Fr.st.peek();
             int wid = img.getWidth();
             int hei = img.getHeight();
             
@@ -305,8 +305,8 @@ public class Filter2D {
             DataBuffer dataBuffer = new DataBufferInt(newimg, wid * hei);
             WritableRaster raster = Raster.createPackedRaster(dataBuffer, wid, hei, wid, new int[]{0xff0000, 0xff00, 0xff}, null);
             DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
-            BufferedImage scaleimage = new BufferedImage(directColorModel, raster, true, null);
-            ImageIcon icon = new ImageIcon(scaleimage);
+            BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+            ImageIcon icon = new ImageIcon(image);
             pic.setIcon(icon);
             pic.repaint();
     	} else if (flag == 2) {	// sharpen the image
@@ -318,7 +318,7 @@ public class Filter2D {
             f.setTitle("Sharpen");
             f.setVisible(true);
             
-            BufferedImage img = Fr.before;
+            BufferedImage img = Fr.st.peek();
             int wid = img.getWidth();
             int hei = img.getHeight();
             f.setSize(wid + 20, hei + 50);
@@ -365,8 +365,8 @@ public class Filter2D {
             DataBuffer dataBuffer = new DataBufferInt(newimg, wid * hei);
             WritableRaster raster = Raster.createPackedRaster(dataBuffer, wid, hei, wid, new int[]{0xff0000, 0xff00, 0xff}, null);
             DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
-            BufferedImage scaleimage = new BufferedImage(directColorModel, raster, true, null);
-            ImageIcon icon = new ImageIcon(scaleimage);
+            BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+            ImageIcon icon = new ImageIcon(image);
             pic.setIcon(icon);
             pic.repaint();
     	} else if (flag == 3) {	// filter the iamge with 3x3 sobel filter
@@ -378,7 +378,7 @@ public class Filter2D {
             f.setTitle("Sobel3x3");
             f.setVisible(true);
             
-            BufferedImage img = Fr.before;
+            BufferedImage img = Fr.st.peek();
             int wid = img.getWidth();
             int hei = img.getHeight();
             f.setSize(wid + 20, hei + 50);
@@ -441,8 +441,8 @@ public class Filter2D {
             DataBuffer dataBuffer = new DataBufferInt(newimg, wid * hei);
             WritableRaster raster = Raster.createPackedRaster(dataBuffer, wid, hei, wid, new int[]{0xff0000, 0xff00, 0xff}, null);
             DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
-            BufferedImage scaleimage = new BufferedImage(directColorModel, raster, true, null);
-            ImageIcon icon = new ImageIcon(scaleimage);
+            BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+            ImageIcon icon = new ImageIcon(image);
             pic.setIcon(icon);
             pic.repaint();
     	} else if (flag == 4) {	// filter the iamge with 2x2 sobel filter
@@ -454,7 +454,7 @@ public class Filter2D {
             f.setTitle("Sobel2x2");
             f.setVisible(true);
             
-            BufferedImage img = Fr.before;
+            BufferedImage img = Fr.st.peek();
             int wid = img.getWidth();
             int hei = img.getHeight();
             f.setSize(wid + 20, hei + 50);
@@ -511,8 +511,8 @@ public class Filter2D {
             DataBuffer dataBuffer = new DataBufferInt(newimg, wid * hei);
             WritableRaster raster = Raster.createPackedRaster(dataBuffer, wid, hei, wid, new int[]{0xff0000, 0xff00, 0xff}, null);
             DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
-            BufferedImage scaleimage = new BufferedImage(directColorModel, raster, true, null);
-            ImageIcon icon = new ImageIcon(scaleimage);
+            BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+            ImageIcon icon = new ImageIcon(image);
             pic.setIcon(icon);
             pic.repaint();
     	} else if (flag == 5) {	// harmonic
@@ -524,7 +524,7 @@ public class Filter2D {
             f.setTitle("Harmonic");
             f.setVisible(true);
             
-            BufferedImage img = Fr.before;
+            BufferedImage img = Fr.st.peek();
             int wid = img.getWidth();
             int hei = img.getHeight();
             f.setSize(wid + 20, hei + 50);
@@ -569,8 +569,8 @@ public class Filter2D {
             DataBuffer dataBuffer = new DataBufferInt(newimg, wid * hei);
             WritableRaster raster = Raster.createPackedRaster(dataBuffer, wid, hei, wid, new int[]{0xff0000, 0xff00, 0xff}, null);
             DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
-            BufferedImage scaleimage = new BufferedImage(directColorModel, raster, true, null);
-            ImageIcon icon = new ImageIcon(scaleimage);
+            BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+            ImageIcon icon = new ImageIcon(image);
             pic.setIcon(icon);
             pic.repaint();
     	} else if (flag == 6) {	// contrahamonic
@@ -582,7 +582,7 @@ public class Filter2D {
             f.setTitle("Contra-Harmonic");
             f.setVisible(true);
             
-            BufferedImage img = Fr.before;
+            BufferedImage img = Fr.st.peek();
             int wid = img.getWidth();
             int hei = img.getHeight();
             f.setSize(wid + 20, hei + 50);
@@ -629,8 +629,8 @@ public class Filter2D {
             DataBuffer dataBuffer = new DataBufferInt(newimg, wid * hei);
             WritableRaster raster = Raster.createPackedRaster(dataBuffer, wid, hei, wid, new int[]{0xff0000, 0xff00, 0xff}, null);
             DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
-            BufferedImage scaleimage = new BufferedImage(directColorModel, raster, true, null);
-            ImageIcon icon = new ImageIcon(scaleimage);
+            BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+            ImageIcon icon = new ImageIcon(image);
             pic.setIcon(icon);
             pic.repaint();
     	} else if (flag == 7) {	// geometric
@@ -642,7 +642,7 @@ public class Filter2D {
             f.setTitle("Geometric");
             f.setVisible(true);
             
-            BufferedImage img = Fr.before;
+            BufferedImage img = Fr.st.peek();
             int wid = img.getWidth();
             int hei = img.getHeight();
             f.setSize(wid + 20, hei + 50);
@@ -686,8 +686,8 @@ public class Filter2D {
             DataBuffer dataBuffer = new DataBufferInt(newimg, wid * hei);
             WritableRaster raster = Raster.createPackedRaster(dataBuffer, wid, hei, wid, new int[]{0xff0000, 0xff00, 0xff}, null);
             DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
-            BufferedImage scaleimage = new BufferedImage(directColorModel, raster, true, null);
-            ImageIcon icon = new ImageIcon(scaleimage);
+            BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+            ImageIcon icon = new ImageIcon(image);
             pic.setIcon(icon);
             pic.repaint();
     	} else if (flag == 8) {	// median
@@ -699,7 +699,7 @@ public class Filter2D {
             f.setTitle("Median");
             f.setVisible(true);
             
-            BufferedImage img = Fr.before;
+            BufferedImage img = Fr.st.peek();
             int wid = img.getWidth();
             int hei = img.getHeight();
             f.setSize(wid + 20, hei + 50);
@@ -759,8 +759,8 @@ public class Filter2D {
             DataBuffer dataBuffer = new DataBufferInt(newimg, wid * hei);
             WritableRaster raster = Raster.createPackedRaster(dataBuffer, wid, hei, wid, new int[]{0xff0000, 0xff00, 0xff}, null);
             DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
-            BufferedImage scaleimage = new BufferedImage(directColorModel, raster, true, null);
-            ImageIcon icon = new ImageIcon(scaleimage);
+            BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+            ImageIcon icon = new ImageIcon(image);
             pic.setIcon(icon);
             pic.repaint();
     	} else if (flag == 9) {	// max
@@ -772,7 +772,7 @@ public class Filter2D {
             f.setTitle("Max");
             f.setVisible(true);
             
-            BufferedImage img = Fr.before;
+            BufferedImage img = Fr.st.peek();
             int wid = img.getWidth();
             int hei = img.getHeight();
             f.setSize(wid + 20, hei + 50);
@@ -815,8 +815,8 @@ public class Filter2D {
             DataBuffer dataBuffer = new DataBufferInt(newimg, wid * hei);
             WritableRaster raster = Raster.createPackedRaster(dataBuffer, wid, hei, wid, new int[]{0xff0000, 0xff00, 0xff}, null);
             DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
-            BufferedImage scaleimage = new BufferedImage(directColorModel, raster, true, null);
-            ImageIcon icon = new ImageIcon(scaleimage);
+            BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+            ImageIcon icon = new ImageIcon(image);
             pic.setIcon(icon);
             pic.repaint();
     	} else if (flag == 10) {	// min
@@ -828,7 +828,7 @@ public class Filter2D {
             f.setTitle("Min");
             f.setVisible(true);
             
-            BufferedImage img = Fr.before;
+            BufferedImage img = Fr.st.peek();
             int wid = img.getWidth();
             int hei = img.getHeight();
             f.setSize(wid + 20, hei + 50);
@@ -871,8 +871,8 @@ public class Filter2D {
             DataBuffer dataBuffer = new DataBufferInt(newimg, wid * hei);
             WritableRaster raster = Raster.createPackedRaster(dataBuffer, wid, hei, wid, new int[]{0xff0000, 0xff00, 0xff}, null);
             DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
-            BufferedImage scaleimage = new BufferedImage(directColorModel, raster, true, null);
-            ImageIcon icon = new ImageIcon(scaleimage);
+            BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+            ImageIcon icon = new ImageIcon(image);
             pic.setIcon(icon);
             pic.repaint();
     	}

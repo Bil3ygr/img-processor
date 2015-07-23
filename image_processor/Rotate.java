@@ -34,15 +34,6 @@ public class Rotate {
 	public Rotate(Frame frame) {
 		Fr = frame;
 	}
-	//
-	public void judge_rotate() {
-		if (Fr.before != null) {
-			rotate_window();
-		} else {
-			String message = "未打开任何图片！";
-        	JOptionPane.showMessageDialog(Fr, message, "提醒", JOptionPane.DEFAULT_OPTION);
-		}
-	}
 	// 旋转
 	public void rotate_window() {
 		panel = new JPanel();
@@ -86,7 +77,7 @@ public class Rotate {
 	
 	public void rotate(int degree) {
 		//BufferedImage img = Fr.st.peek();
-		BufferedImage img = Fr.before;
+		BufferedImage img = Fr.st.peek();
 		int ih = img.getHeight();
 		int iw = img.getWidth();
 		int w = 0;
@@ -142,6 +133,7 @@ public class Rotate {
 		op.filter(img, image);
 		
 		Fr.st.push(image);
+		Fr.st_.clear();
 		Fr.after = image;
 		ImageIcon icon = new ImageIcon(image);
 		Fr.Pic.setIcon(icon);

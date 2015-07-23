@@ -63,13 +63,21 @@ public class Files implements ActionListener {
                     if (read != null) {
                         Fr.before = read;
                         Fr.after = read;
+                        
+                        if (!Fr.st.isEmpty()) {
+                        	Fr.st.clear();
+                        }
+                        if (!Fr.st_.isEmpty()) {
+                        	Fr.st_.clear();
+                        }
+                        Fr.st.push(read);
                     
                         ImageIcon icon = new ImageIcon(Fr.before);
                         Fr.Pic.setIcon(icon);
                         Fr.Pic.repaint();
                     } else {
                     	String message = "此文件不是图片！";
-                    	JOptionPane.showMessageDialog(Fr, message, "提醒", JOptionPane.DEFAULT_OPTION);
+                    	JOptionPane.showMessageDialog(Fr, message, "提醒", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (IOException e1) {
                     // TODO Auto-generated catch block

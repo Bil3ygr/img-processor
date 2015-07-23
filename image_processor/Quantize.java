@@ -34,15 +34,6 @@ public class Quantize {
     public Quantize(Frame frame) {
     	Fr = frame;
     }
-    //
-	public void judge_quantize() {
-		if (Fr.before != null) {
-			quantize_window();
-		} else {
-			String message = "未打开任何图片！";
-        	JOptionPane.showMessageDialog(Fr, message, "提醒", JOptionPane.DEFAULT_OPTION);
-		}
-	}
     //quantize
   	public void quantize_window() {
   		panel = new JPanel();
@@ -54,9 +45,10 @@ public class Quantize {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         jdlg.setLocation((screenSize.width - 250) / 2, (screenSize.height - 100) / 2);
         jdlg.setSize(250, 100);
+        jdlg.getRootPane().setDefaultButton(bt);
         
         panel.setLayout(new GridLayout(3, 1));
-        label = new JLabel("请输入图像的新灰度级");
+        label = new JLabel("请输入图像的新灰度级（不大于256）");
         label.setHorizontalAlignment(JLabel.CENTER);
         tf.setHorizontalAlignment(JTextField.CENTER);
         bt.setText("确定");
@@ -94,7 +86,12 @@ public class Quantize {
         bt.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		jdlg.dispose();
-          		quantize(Integer.parseInt(tf.getText()));
+        		if (Integer.parseInt(tf.getText()) > 256) {
+        			String message = "输入不合法！";
+                	JOptionPane.showMessageDialog(Fr, message, "提醒", JOptionPane.DEFAULT_OPTION);
+        		} else {
+        			quantize(Integer.parseInt(tf.getText()));
+        		}
         	}
         });
         jdlg.getContentPane().add(panel, BorderLayout.CENTER);
@@ -102,7 +99,7 @@ public class Quantize {
   	}
   	//quantize
   	public void quantize(int level) {
-  		BufferedImage img = Fr.before;
+  		BufferedImage img = Fr.st.peek();
         int wid = img.getWidth();
         int hei = img.getHeight();
         int beforeimg[] = new int[wid * hei];
@@ -113,9 +110,12 @@ public class Quantize {
         DataBuffer dataBuffer = new DataBufferInt(afterimg, wid * hei);
         WritableRaster raster = Raster.createPackedRaster(dataBuffer, wid, hei, wid, new int[]{0xff0000, 0xff00, 0xff}, null);
         DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
-        BufferedImage scaleimage = new BufferedImage(directColorModel, raster, true, null);
-        Fr.after = scaleimage;
-        ImageIcon icon = new ImageIcon(scaleimage);
+        BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+        
+        Fr.st.push(image);
+        Fr.st_.clear();
+        Fr.after = image;
+        ImageIcon icon = new ImageIcon(image);
         Fr.Pic.setIcon(icon);
         Fr.Pic.repaint();
   	}

@@ -27,7 +27,7 @@ public class Plot_Hist {
         JLabel pic_ = new JLabel();
         JLabel pic__ = new JLabel();
         
-        BufferedImage img = Fr.before;
+        BufferedImage img = Fr.st.peek();
         
         int wid = img.getWidth();
         int hei = img.getHeight();
