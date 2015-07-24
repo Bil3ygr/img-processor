@@ -57,6 +57,7 @@ public class Files implements ActionListener {
                 String path = dlg.getSelectedFile().getAbsolutePath();
                 // 设置绝对路径
                 absolutePath = path;
+                Fr.currentPath = path;
                 try {
                     BufferedImage read = ImageIO.read(new File(path));
                     // 不为空，读取正确
@@ -107,14 +108,56 @@ public class Files implements ActionListener {
                     g2.dispose();
                     // 保存文件，只需输入文件名，自动完成后缀
                     if (dlg.getFileFilter() == filter_bmp) {
-                    	file = new File(path + ".bmp");
-                    	ImageIO.write(bi, "bmp", file);
+                    	// 文件名结尾是否为bmp
+                    	if (!path.endsWith(".bmp") && !path.endsWith(".BMP")) {
+                    		file = new File(path + ".bmp");
+                    	} else {
+                    		file = new File(path);
+                    	}
+                    	// 文件是否已存在
+                    	if (file.exists()) {
+                    		String message = "文件已存在，是否覆盖？";
+                    		int n = JOptionPane.showConfirmDialog(Fr, message, "提醒", JOptionPane.OK_CANCEL_OPTION);
+                    		if (n == 0) {
+                    			ImageIO.write(bi, "bmp", file);
+                    		}
+                    	} else {
+                    		ImageIO.write(bi, "bmp", file);
+                    	}
                     } else if (dlg.getFileFilter() == filter_png) {
-                    	file = new File(path + ".png");
-                    	ImageIO.write(bi, "png", file);
+                    	// 文件名结尾是否为png
+                    	if (!path.endsWith(".png") && !path.endsWith(".PNG")) {
+                    		file = new File(path + ".png");
+                    	} else {
+                    		file = new File(path);
+                    	}
+                    	// 文件是否已存在
+                    	if (file.exists()) {
+                    		String message = "文件已存在，是否覆盖？";
+                    		int n = JOptionPane.showConfirmDialog(Fr, message, "提醒", JOptionPane.OK_CANCEL_OPTION);
+                    		if (n == 0) {
+                    			ImageIO.write(bi, "png", file);
+                    		}
+                    	} else {
+                    		ImageIO.write(bi, "png", file);
+                    	}
                     } else {
-                    	file = new File(path + ".jpg");
-                    	ImageIO.write(bi, "jpg", file);
+                    	// 文件名结尾是否为jpg
+                    	if (!path.endsWith(".jpg") && !path.endsWith(".JPG") && !path.endsWith(".jpeg") && !path.endsWith(".JPEG")) {
+                    		file = new File(path + ".jpg");
+                    	} else {
+                    		file = new File(path);
+                    	}
+                    	// 文件是否已存在
+                    	if (file.exists()) {
+                    		String message = "文件已存在，是否覆盖？";
+                    		int n = JOptionPane.showConfirmDialog(Fr, message, "提醒", JOptionPane.OK_CANCEL_OPTION);
+                    		if (n == 0) {
+                    			ImageIO.write(bi, "jpg", file);
+                    		}
+                    	} else {
+                    		ImageIO.write(bi, "jpg", file);
+                    	}
                     }
                 } catch (IOException e1) {
                     // TODO Auto-generated catch block

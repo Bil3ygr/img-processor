@@ -14,7 +14,6 @@ public class Processor implements ActionListener {
     Quantize quantize;
     Plot_Hist plot_hist;
     Equalize_Hist equalize_hist;
-    View_As_Window view_as_window;
     Filter2D filter2d;
     DFT2D dft2d;
     Filter2D_Freq filter2d_freq;
@@ -31,7 +30,6 @@ public class Processor implements ActionListener {
         Fr.quantize.addActionListener(this);
         Fr.plot_hist_gray.addActionListener(this);
         Fr.equalize_hist_gray.addActionListener(this);
-        Fr.view_as_window.addActionListener(this);
         Fr.smooth.addActionListener(this);
         Fr.sharpen.addActionListener(this);
         Fr.sobel3x3.addActionListener(this);
@@ -86,11 +84,6 @@ public class Processor implements ActionListener {
         	equalize_hist = new Equalize_Hist(Fr);
         	if (Judge()) {
         		equalize_hist.equalize_hist(0);
-        	}
-        } else if (source == Fr.view_as_window) {
-        	view_as_window = new View_As_Window(Fr);
-        	if (Judge()) {
-        		view_as_window.view_as_window_();
         	}
         } else if (source == Fr.smooth) {
         	filter2d = new Filter2D(Fr);

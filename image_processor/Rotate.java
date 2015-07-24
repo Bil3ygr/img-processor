@@ -66,7 +66,7 @@ public class Rotate {
 					rotate(Integer.parseInt(tf.getText()));
 					jdlg.dispose();
 				} catch (NumberFormatException e){
-					String message = "请输入数字！";
+					String message = "非法输入！";
 		        	JOptionPane.showMessageDialog(Fr, message, "提醒", JOptionPane.DEFAULT_OPTION);
 				}
 			}
@@ -164,7 +164,7 @@ public class Rotate {
 				      || e.getKeyChar() == KeyEvent.VK_ENTER || e.getKeyChar() == KeyEvent.VK_TAB
 				      || e.getKeyChar() == KeyEvent.VK_BACK_SPACE || e.getKeyChar() == KeyEvent.VK_DELETE 
 				      || e.getKeyChar() == KeyEvent.VK_LEFT || e.getKeyChar() == KeyEvent.VK_RIGHT 
-				      || e.getKeyChar() == KeyEvent.VK_ESCAPE)
+				      || e.getKeyChar() == KeyEvent.VK_ESCAPE || e.getKeyChar() == KeyEvent.VK_MINUS)
 				      return;
 			e.consume();
 		}

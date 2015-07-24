@@ -2,6 +2,7 @@ package image_processor;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -14,16 +15,26 @@ import java.awt.image.DataBufferInt;
 import java.awt.image.DirectColorModel;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Filter2D {
 	Frame Fr;
@@ -35,6 +46,24 @@ public class Filter2D {
     JButton bt;
     JDialog jdlg;
     double Q = 0;
+    
+    JFrame f;
+    JMenuBar menubar;
+    JMenu file;
+    JMenuItem save;
+    JMenuItem exit;
+    JScrollPane scrollpane;
+    JLabel pic;
+    JFileChooser dlg;
+    BufferedImage after_img;
+    // 文件类型
+    String[] jpg = {"jpg", "jpeg", "JPG", "JPEG"};
+    String[] bmp = {"bmp", "BMP"};
+    String[] png = {"png", "PNG"};
+    // 文件类型过滤器
+    FileFilter filter_jpg = new FileNameExtensionFilter("*.jpg", jpg);
+    FileFilter filter_bmp = new FileNameExtensionFilter("*.bmp", bmp);
+    FileFilter filter_png = new FileNameExtensionFilter("*.png", png);
     
     public Filter2D(Frame frame) {
     	Fr = frame;
@@ -147,8 +176,8 @@ public class Filter2D {
 			@Override
 			public void keyTyped(KeyEvent e) {
 				// TODO Auto-generated method stub
-				// 限制最大只能输入8位数
-				if (tf.getText().length() < 8)
+				// 限制最大只能输入3位数
+				if (tf.getText().length() < 3)
 					// 限制只能输入以下按键（数字，方向，回车，ESC，tab，删除，退格）
 					if ((e.getKeyChar() >= KeyEvent.VK_0 && e.getKeyChar() <= KeyEvent.VK_9) 
 					      || e.getKeyChar() == KeyEvent.VK_ENTER || e.getKeyChar() == KeyEvent.VK_TAB
@@ -164,8 +193,13 @@ public class Filter2D {
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO 自动生成的方法存根
 				try {
-					filter2d(Integer.parseInt(tf.getText()), flag);
-					jdlg.dispose();
+					if (Integer.parseInt(tf.getText()) % 2 != 0) {
+						filter2d(Integer.parseInt(tf.getText()), flag);
+						jdlg.dispose();
+					} else {
+						String message = "输入数字不合法！";
+			        	JOptionPane.showMessageDialog(Fr, message, "提醒", JOptionPane.DEFAULT_OPTION);
+					}
 				} catch (NumberFormatException e){
 					String message = "请输入数字！";
 		        	JOptionPane.showMessageDialog(Fr, message, "提醒", JOptionPane.DEFAULT_OPTION);
@@ -220,8 +254,8 @@ public class Filter2D {
 			@Override
 			public void keyTyped(KeyEvent e) {
 				// TODO Auto-generated method stub
-				// 限制最大只能输入8位数
-				if (tf.getText().length() < 8)
+				// 限制最大只能输入3位数
+				if (tf.getText().length() < 3)
 					// 限制只能输入以下按键（数字，方向，回车，ESC，tab，删除，退格）
 					if ((e.getKeyChar() >= KeyEvent.VK_0 && e.getKeyChar() <= KeyEvent.VK_9) 
 					      || e.getKeyChar() == KeyEvent.VK_ENTER || e.getKeyChar() == KeyEvent.VK_TAB
@@ -238,8 +272,13 @@ public class Filter2D {
 				// TODO 自动生成的方法存根
 				try {
 					Q = Double.parseDouble(tf_.getText());
-					filter2d(Integer.parseInt(tf.getText()), flag);
-					jdlg.dispose();
+					if (Integer.parseInt(tf.getText()) % 2 != 0) {
+						filter2d(Integer.parseInt(tf.getText()), flag);
+						jdlg.dispose();
+					} else {
+						String message = "输入数字不合法！";
+			        	JOptionPane.showMessageDialog(Fr, message, "提醒", JOptionPane.DEFAULT_OPTION);
+					}
 				} catch (NumberFormatException e){
 					String message = "请输入数字！";
 		        	JOptionPane.showMessageDialog(Fr, message, "提醒", JOptionPane.DEFAULT_OPTION);
@@ -249,23 +288,23 @@ public class Filter2D {
 		jdlg.getContentPane().add(panel, BorderLayout.CENTER);
 		jdlg.setVisible(true);
     }
-  //filter2d
+    //filter2d
     public void filter2d(int size, int flag) {
     	if (flag == 1) {	// smooth the image
-    		JFrame f = new JFrame();
-            JLabel pic = new JLabel();
-            
-            f.getContentPane().add(pic, BorderLayout.CENTER);
+    		frame();
             
             f.setTitle("Smooth");
             f.setVisible(true);
-            
+
             BufferedImage img = Fr.st.peek();
             int wid = img.getWidth();
             int hei = img.getHeight();
             
-            f.setSize(wid + 20, hei + 50);
-            /*
+            f.setSize(wid + 19, hei + 66);
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        	f.setLocation((screenSize.width - f.getWidth()) / 2, (screenSize.height - f.getHeight()) / 2);
+        	
+        	/*
              * set size
              */
             int level = size;
@@ -306,14 +345,12 @@ public class Filter2D {
             WritableRaster raster = Raster.createPackedRaster(dataBuffer, wid, hei, wid, new int[]{0xff0000, 0xff00, 0xff}, null);
             DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
             BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+            after_img = image;
             ImageIcon icon = new ImageIcon(image);
             pic.setIcon(icon);
             pic.repaint();
     	} else if (flag == 2) {	// sharpen the image
-    		JFrame f = new JFrame();
-            JLabel pic = new JLabel();
-            
-            f.getContentPane().add(pic, BorderLayout.CENTER);
+    		frame();
             
             f.setTitle("Sharpen");
             f.setVisible(true);
@@ -321,7 +358,11 @@ public class Filter2D {
             BufferedImage img = Fr.st.peek();
             int wid = img.getWidth();
             int hei = img.getHeight();
-            f.setSize(wid + 20, hei + 50);
+            
+            f.setSize(wid + 19, hei + 66);
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        	f.setLocation((screenSize.width - f.getWidth()) / 2, (screenSize.height - f.getHeight()) / 2);
+        	
             int[] beforeimg = new int[wid * hei];
             int[] newimg = new int[wid * hei];
             img.getRGB(0, 0, wid, hei, beforeimg, 0, wid);
@@ -366,14 +407,12 @@ public class Filter2D {
             WritableRaster raster = Raster.createPackedRaster(dataBuffer, wid, hei, wid, new int[]{0xff0000, 0xff00, 0xff}, null);
             DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
             BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+            after_img = image;
             ImageIcon icon = new ImageIcon(image);
             pic.setIcon(icon);
             pic.repaint();
     	} else if (flag == 3) {	// filter the iamge with 3x3 sobel filter
-    		JFrame f = new JFrame();
-            JLabel pic = new JLabel();
-            
-            f.getContentPane().add(pic, BorderLayout.CENTER);
+    		frame();
             
             f.setTitle("Sobel3x3");
             f.setVisible(true);
@@ -381,7 +420,11 @@ public class Filter2D {
             BufferedImage img = Fr.st.peek();
             int wid = img.getWidth();
             int hei = img.getHeight();
-            f.setSize(wid + 20, hei + 50);
+            
+            f.setSize(wid + 19, hei + 66);
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        	f.setLocation((screenSize.width - f.getWidth()) / 2, (screenSize.height - f.getHeight()) / 2);
+            
             int[] beforeimg = new int[wid * hei];
             int[] newimg = new int[wid * hei];
             img.getRGB(0, 0, wid, hei, beforeimg, 0, wid);
@@ -442,14 +485,12 @@ public class Filter2D {
             WritableRaster raster = Raster.createPackedRaster(dataBuffer, wid, hei, wid, new int[]{0xff0000, 0xff00, 0xff}, null);
             DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
             BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+            after_img = image;
             ImageIcon icon = new ImageIcon(image);
             pic.setIcon(icon);
             pic.repaint();
     	} else if (flag == 4) {	// filter the iamge with 2x2 sobel filter
-    		JFrame f = new JFrame();
-            JLabel pic = new JLabel();
-            
-            f.getContentPane().add(pic, BorderLayout.CENTER);
+    		frame();
             
             f.setTitle("Sobel2x2");
             f.setVisible(true);
@@ -457,7 +498,11 @@ public class Filter2D {
             BufferedImage img = Fr.st.peek();
             int wid = img.getWidth();
             int hei = img.getHeight();
-            f.setSize(wid + 20, hei + 50);
+            
+            f.setSize(wid + 19, hei + 66);
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        	f.setLocation((screenSize.width - f.getWidth()) / 2, (screenSize.height - f.getHeight()) / 2);
+            
             int[] beforeimg = new int[wid * hei];
             int[] newimg = new int[wid * hei];
             img.getRGB(0, 0, wid, hei, beforeimg, 0, wid);
@@ -512,14 +557,12 @@ public class Filter2D {
             WritableRaster raster = Raster.createPackedRaster(dataBuffer, wid, hei, wid, new int[]{0xff0000, 0xff00, 0xff}, null);
             DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
             BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+            after_img = image;
             ImageIcon icon = new ImageIcon(image);
             pic.setIcon(icon);
             pic.repaint();
     	} else if (flag == 5) {	// harmonic
-    		JFrame f = new JFrame();
-            JLabel pic = new JLabel();
-            
-            f.getContentPane().add(pic, BorderLayout.CENTER);
+    		frame();
             
             f.setTitle("Harmonic");
             f.setVisible(true);
@@ -527,7 +570,10 @@ public class Filter2D {
             BufferedImage img = Fr.st.peek();
             int wid = img.getWidth();
             int hei = img.getHeight();
-            f.setSize(wid + 20, hei + 50);
+            
+            f.setSize(wid + 19, hei + 66);
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        	f.setLocation((screenSize.width - f.getWidth()) / 2, (screenSize.height - f.getHeight()) / 2);
             /*
              * set size
              */
@@ -570,14 +616,12 @@ public class Filter2D {
             WritableRaster raster = Raster.createPackedRaster(dataBuffer, wid, hei, wid, new int[]{0xff0000, 0xff00, 0xff}, null);
             DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
             BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+            after_img = image;
             ImageIcon icon = new ImageIcon(image);
             pic.setIcon(icon);
             pic.repaint();
     	} else if (flag == 6) {	// contrahamonic
-    		JFrame f = new JFrame();
-            JLabel pic = new JLabel();
-            
-            f.getContentPane().add(pic, BorderLayout.CENTER);
+    		frame();
             
             f.setTitle("Contra-Harmonic");
             f.setVisible(true);
@@ -585,7 +629,10 @@ public class Filter2D {
             BufferedImage img = Fr.st.peek();
             int wid = img.getWidth();
             int hei = img.getHeight();
-            f.setSize(wid + 20, hei + 50);
+            
+            f.setSize(wid + 19, hei + 66);
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        	f.setLocation((screenSize.width - f.getWidth()) / 2, (screenSize.height - f.getHeight()) / 2);
             /*
              * set size
              */
@@ -630,14 +677,12 @@ public class Filter2D {
             WritableRaster raster = Raster.createPackedRaster(dataBuffer, wid, hei, wid, new int[]{0xff0000, 0xff00, 0xff}, null);
             DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
             BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+            after_img = image;
             ImageIcon icon = new ImageIcon(image);
             pic.setIcon(icon);
             pic.repaint();
     	} else if (flag == 7) {	// geometric
-    		JFrame f = new JFrame();
-            JLabel pic = new JLabel();
-            
-            f.getContentPane().add(pic, BorderLayout.CENTER);
+    		frame();
             
             f.setTitle("Geometric");
             f.setVisible(true);
@@ -645,7 +690,10 @@ public class Filter2D {
             BufferedImage img = Fr.st.peek();
             int wid = img.getWidth();
             int hei = img.getHeight();
-            f.setSize(wid + 20, hei + 50);
+            
+            f.setSize(wid + 19, hei + 66);
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        	f.setLocation((screenSize.width - f.getWidth()) / 2, (screenSize.height - f.getHeight()) / 2);
             /*
              * set size
              */
@@ -687,14 +735,12 @@ public class Filter2D {
             WritableRaster raster = Raster.createPackedRaster(dataBuffer, wid, hei, wid, new int[]{0xff0000, 0xff00, 0xff}, null);
             DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
             BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+            after_img = image;
             ImageIcon icon = new ImageIcon(image);
             pic.setIcon(icon);
             pic.repaint();
     	} else if (flag == 8) {	// median
-    		JFrame f = new JFrame();
-            JLabel pic = new JLabel();
-            
-            f.getContentPane().add(pic, BorderLayout.CENTER);
+    		frame();
             
             f.setTitle("Median");
             f.setVisible(true);
@@ -702,7 +748,10 @@ public class Filter2D {
             BufferedImage img = Fr.st.peek();
             int wid = img.getWidth();
             int hei = img.getHeight();
-            f.setSize(wid + 20, hei + 50);
+            
+            f.setSize(wid + 19, hei + 66);
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        	f.setLocation((screenSize.width - f.getWidth()) / 2, (screenSize.height - f.getHeight()) / 2);
             /*
              * set size
              */
@@ -760,14 +809,12 @@ public class Filter2D {
             WritableRaster raster = Raster.createPackedRaster(dataBuffer, wid, hei, wid, new int[]{0xff0000, 0xff00, 0xff}, null);
             DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
             BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+            after_img = image;
             ImageIcon icon = new ImageIcon(image);
             pic.setIcon(icon);
             pic.repaint();
     	} else if (flag == 9) {	// max
-    		JFrame f = new JFrame();
-            JLabel pic = new JLabel();
-            
-            f.getContentPane().add(pic, BorderLayout.CENTER);
+    		frame();
             
             f.setTitle("Max");
             f.setVisible(true);
@@ -775,7 +822,10 @@ public class Filter2D {
             BufferedImage img = Fr.st.peek();
             int wid = img.getWidth();
             int hei = img.getHeight();
-            f.setSize(wid + 20, hei + 50);
+            
+            f.setSize(wid + 19, hei + 66);
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        	f.setLocation((screenSize.width - f.getWidth()) / 2, (screenSize.height - f.getHeight()) / 2);
             /*
              * set size
              */
@@ -816,14 +866,12 @@ public class Filter2D {
             WritableRaster raster = Raster.createPackedRaster(dataBuffer, wid, hei, wid, new int[]{0xff0000, 0xff00, 0xff}, null);
             DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
             BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+            after_img = image;
             ImageIcon icon = new ImageIcon(image);
             pic.setIcon(icon);
             pic.repaint();
     	} else if (flag == 10) {	// min
-    		JFrame f = new JFrame();
-            JLabel pic = new JLabel();
-            
-            f.getContentPane().add(pic, BorderLayout.CENTER);
+    		frame();
             
             f.setTitle("Min");
             f.setVisible(true);
@@ -831,7 +879,10 @@ public class Filter2D {
             BufferedImage img = Fr.st.peek();
             int wid = img.getWidth();
             int hei = img.getHeight();
-            f.setSize(wid + 20, hei + 50);
+            
+            f.setSize(wid + 19, hei + 66);
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        	f.setLocation((screenSize.width - f.getWidth()) / 2, (screenSize.height - f.getHeight()) / 2);
             /*
              * set size
              */
@@ -872,9 +923,121 @@ public class Filter2D {
             WritableRaster raster = Raster.createPackedRaster(dataBuffer, wid, hei, wid, new int[]{0xff0000, 0xff00, 0xff}, null);
             DirectColorModel directColorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
             BufferedImage image = new BufferedImage(directColorModel, raster, true, null);
+            after_img = image;
             ImageIcon icon = new ImageIcon(image);
             pic.setIcon(icon);
             pic.repaint();
     	}
+    }
+    // 新建窗口
+    public void frame() {
+    	f = new JFrame();
+    	menubar = new JMenuBar();
+    	file = new JMenu("文件");
+    	save = new JMenuItem("保存");
+    	exit = new JMenuItem("退出");
+    	pic = new JLabel();
+    	
+    	scrollpane = new JScrollPane(pic);
+    	scrollpane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollpane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        
+        f.setJMenuBar(menubar);
+        
+        menubar.add(file);
+        file.add(save);
+        file.add(exit);
+        
+        f.getContentPane().add(scrollpane, BorderLayout.CENTER);
+        pic.setHorizontalAlignment(JLabel.CENTER);
+        // 保存
+        save.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				// 打开选中文件的默认目录
+	        	dlg = new JFileChooser(new File(Fr.currentPath));
+	        	// 设置过滤器
+	        	dlg.setFileFilter(filter_bmp);
+	            dlg.setFileFilter(filter_png);
+	            dlg.setFileFilter(filter_jpg);
+	            dlg.setDialogTitle("保存文件");
+	            int result = dlg.showSaveDialog(Fr);
+	            if (result == JFileChooser.APPROVE_OPTION) {
+	                String path = dlg.getSelectedFile().getAbsolutePath();
+	                try {
+	                    File file;
+	                    BufferedImage bi = new BufferedImage(after_img.getWidth(null), after_img.getHeight(null), BufferedImage.TYPE_INT_RGB);
+	                    Graphics2D g2 = bi.createGraphics();
+	                    g2.drawImage(after_img, 0, 0, null);
+	                    g2.dispose();
+	                 // 保存文件，只需输入文件名，自动完成后缀
+	                    if (dlg.getFileFilter() == filter_bmp) {
+	                    	// 文件名结尾是否为bmp
+	                    	if (!path.endsWith(".bmp") && !path.endsWith(".BMP")) {
+	                    		file = new File(path + ".bmp");
+	                    	} else {
+	                    		file = new File(path);
+	                    	}
+	                    	// 文件是否已存在
+	                    	if (file.exists()) {
+	                    		String message = "文件已存在，是否覆盖？";
+	                    		int n = JOptionPane.showConfirmDialog(Fr, message, "提醒", JOptionPane.OK_CANCEL_OPTION);
+	                    		if (n == 0) {
+	                    			ImageIO.write(bi, "bmp", file);
+	                    		}
+	                    	} else {
+	                    		ImageIO.write(bi, "bmp", file);
+	                    	}
+	                    } else if (dlg.getFileFilter() == filter_png) {
+	                    	// 文件名结尾是否为png
+	                    	if (!path.endsWith(".png") && !path.endsWith(".PNG")) {
+	                    		file = new File(path + ".png");
+	                    	} else {
+	                    		file = new File(path);
+	                    	}
+	                    	// 文件是否已存在
+	                    	if (file.exists()) {
+	                    		String message = "文件已存在，是否覆盖？";
+	                    		int n = JOptionPane.showConfirmDialog(Fr, message, "提醒", JOptionPane.OK_CANCEL_OPTION);
+	                    		if (n == 0) {
+	                    			ImageIO.write(bi, "png", file);
+	                    		}
+	                    	} else {
+	                    		ImageIO.write(bi, "png", file);
+	                    	}
+	                    } else {
+	                    	// 文件名结尾是否为jpg
+	                    	if (!path.endsWith(".jpg") && !path.endsWith(".JPG") && !path.endsWith(".jpeg") && !path.endsWith(".JPEG")) {
+	                    		file = new File(path + ".jpg");
+	                    	} else {
+	                    		file = new File(path);
+	                    	}
+	                    	// 文件是否已存在
+	                    	if (file.exists()) {
+	                    		String message = "文件已存在，是否覆盖？";
+	                    		int n = JOptionPane.showConfirmDialog(Fr, message, "提醒", JOptionPane.OK_CANCEL_OPTION);
+	                    		if (n == 0) {
+	                    			ImageIO.write(bi, "jpg", file);
+	                    		}
+	                    	} else {
+	                    		ImageIO.write(bi, "jpg", file);
+	                    	}
+	                    }
+	                } catch (IOException e1) {
+	                    // TODO Auto-generated catch block
+	                    e1.printStackTrace();
+	                }
+	            }
+			}
+        });
+        // 退出
+        exit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				f.dispose();
+			}
+        });
     }
 }

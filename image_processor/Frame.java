@@ -44,8 +44,6 @@ public class Frame extends JFrame {
     JMenuItem equalize_hist_color_1;
     JMenuItem equalize_hist_color_2;
     
-    JMenuItem view_as_window;
-    
     JMenu filter2d;
     JMenuItem smooth;
     JMenuItem sharpen;
@@ -83,12 +81,14 @@ public class Frame extends JFrame {
     JMenuItem about;
 
     JScrollPane ScrollPane;
+    
+    String currentPath;
     /*
      * create a frame
      */
     public Frame() {
     	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    	this.setLocation((screenSize.width - 500) / 2, (screenSize.height - 500) / 2);
+    	this.setLocation((screenSize.width - 550) / 2, (screenSize.height - 550) / 2);
         
         setTitle("Image Processor");
         setSize(550, 550);
@@ -106,8 +106,8 @@ public class Frame extends JFrame {
         Pic = new JLabel();
         
         ScrollPane = new JScrollPane(Pic);
-        ScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        ScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        ScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        ScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         
         setJMenuBar(menubar);
         
@@ -168,8 +168,7 @@ public class Frame extends JFrame {
         equalize_hist_color = new JMenu("彩色直方图均衡化");
         equalize_hist_color_1 = new JMenuItem("分别对RGB均衡化");
         equalize_hist_color_2 = new JMenuItem("对RGB求平均再均衡化");
-        view_as_window = new JMenuItem("截图");
-        filter2d = new JMenu("滤波");
+        filter2d = new JMenu("滤波（灰度图）");
         smooth = new JMenuItem("平滑");
         sharpen = new JMenuItem("锐化");
         sobel3x3 = new JMenuItem("Sobel3x3");
@@ -180,14 +179,14 @@ public class Frame extends JFrame {
         median = new JMenuItem("中值");
         max = new JMenuItem("最大值");
         min = new JMenuItem("最小值");
-        dft2d = new JMenu("离散傅里叶变换");
+        dft2d = new JMenu("离散傅里叶变换（灰度图）");
         dft2d_dft = new JMenuItem("DFT");
         dft2d_idft = new JMenuItem("IDFT");
-        filter2d_freq = new JMenu("频率域滤波");
+        filter2d_freq = new JMenu("频率域滤波（灰度图）");
         filter2d_freq_smooth = new JMenuItem("平滑");
         filter2d_freq_sharpen = new JMenuItem("锐化");
-        add_gaussian_noise = new JMenuItem("添加高斯噪声");
-        add_impulse_noise = new JMenuItem("添加脉冲（椒盐）噪声");
+        add_gaussian_noise = new JMenuItem("添加高斯噪声（灰度图）");
+        add_impulse_noise = new JMenuItem("添加脉冲（椒盐）噪声（灰度图）");
         haze_removal = new JMenuItem("去雾");
         guide_filter = new JMenuItem("导向滤波");
         
@@ -203,7 +202,6 @@ public class Frame extends JFrame {
         equalize_hist.add(equalize_hist_color);
         equalize_hist_color.add(equalize_hist_color_1);
         equalize_hist_color.add(equalize_hist_color_2);
-        process.add(view_as_window);
         process.add(filter2d);
         filter2d.add(smooth);
         filter2d.add(sharpen);
