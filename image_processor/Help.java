@@ -15,7 +15,7 @@ public class Help implements ActionListener {
         Object source = e.getSource();
 
         if (source == Fr.about) {
-            String message = "Made by : 12330225";
+            String message = "Made by : \n12330225 Â½ÑåÁØ\n12330223 Â³Éı¸Ù\n12330253 ÅËÂ·Ã÷\n12330224 Â½ìÅÓî";
             JOptionPane.showMessageDialog(Fr, message, "¹ØÓÚ", JOptionPane.DEFAULT_OPTION);
         }
     }
